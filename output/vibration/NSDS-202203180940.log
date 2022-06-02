@@ -1,0 +1,2 @@
+ 2589 - 2022-03-18 09:40:43,586 - DDS2.py[line:57] - INFO: New Log begins:output/vibration\NSDS-202203180940.log
+ 2589 - 2022-03-18 09:40:43,586 - DDS2.py[line:111] - DEBUG: send_msg:LED_B CLOSE

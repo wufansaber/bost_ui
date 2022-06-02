@@ -1,0 +1,2 @@
+ 6372 - 2022-05-09 09:41:02,668 - DDS2.py[line:57] - INFO: New Log begins:output\NSDS-202205090941.log
+ 6373 - 2022-05-09 09:41:02,669 - DDS2.py[line:111] - DEBUG: send_msg:LED_B CLOSE

@@ -1,0 +1,359 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>689</width>
+    <height>936</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QPushButton" name="BOST_FOR_FCOUSE_Button">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>60</y>
+      <width>151</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>move_fcouse</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="analyze_WDI_focus_Button">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>140</y>
+      <width>171</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>analyze_move_fcouse</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="analyze_offset_Button">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>140</y>
+      <width>151</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>analyze_offset</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="cyc_value">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>70</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="cyc_label">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>40</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>设置重复次数</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="FM_label">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>40</y>
+      <width>72</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>FMfile</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="FMfile_text">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>70</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="static_fcouse_Button">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>240</y>
+      <width>151</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>static_fcouse</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="static_fcouse_cyc_value">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>250</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="static_fcouse_cyc_label">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>220</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>设置重复次数</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="analyze_static_fcouse_Button">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>240</y>
+      <width>191</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>analyze_static_fcouse</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Region_Vibration_Button">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>330</y>
+      <width>181</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>region_vibration</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="FMfile_Vibration_text">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>350</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="cyc_label_2">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>320</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>设置重复次数</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="FM_label_2">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>320</y>
+      <width>72</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>FMfile</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="Vibration_scan_rep_value">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>350</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Global_Scan_Button">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>420</y>
+      <width>131</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>global_scan</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="global_scan_rep_value">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>430</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="cyc_label_3">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>400</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>设置重复次数</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="wait_time_for_fcouse_text">
+    <property name="geometry">
+     <rect>
+      <x>460</x>
+      <y>70</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="wait_time_for_fcouse_text_label">
+    <property name="geometry">
+     <rect>
+      <x>470</x>
+      <y>40</y>
+      <width>72</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>等待时间</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="wait_time_for_vibration_label">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>320</y>
+      <width>72</width>
+      <height>15</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>等待时间</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="wait_time_for_vibration_text">
+    <property name="geometry">
+     <rect>
+      <x>510</x>
+      <y>350</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="camer_Button">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>510</y>
+      <width>131</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>相机测试</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="led_test_Button">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>510</y>
+      <width>131</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>LED测试</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="BOST21_Button">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>590</y>
+      <width>131</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>bost21</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="intensity_stability_Button">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>590</y>
+      <width>131</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>荧光强度一致性</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>689</width>
+     <height>26</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
