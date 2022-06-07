@@ -97,89 +97,151 @@ class Ui_MainWindow(object):
         MainWindow.resize(1300, 800)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.chip_in_button = QtWidgets.QPushButton(self.centralwidget)
+        self.chip_in_button = QtWidgets.QPushButton(self.centralwidget)# 进仓触发
         self.chip_in_button.setGeometry(QtCore.QRect(80, 60, 93, 28))
         self.chip_in_button.setObjectName("chip_in_button")
-        self.chip_out_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.chip_out_button = QtWidgets.QPushButton(self.centralwidget)#出仓触发
         self.chip_out_button.setGeometry(QtCore.QRect(80, 110, 93, 28))
         self.chip_out_button.setObjectName("chip_out_button")
-        self.z_move_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.z_move_button = QtWidgets.QPushButton(self.centralwidget)#z轴触发
         self.z_move_button.setGeometry(QtCore.QRect(220, 60, 93, 28))
         self.z_move_button.setObjectName("z_move_button")
-        self.x_move_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.x_move_button = QtWidgets.QPushButton(self.centralwidget)#x轴触发
         self.x_move_button.setGeometry(QtCore.QRect(340, 60, 93, 28))
         self.x_move_button.setObjectName("x_move_button")
-        self.y_move_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.y_move_button = QtWidgets.QPushButton(self.centralwidget)#y轴触发
         self.y_move_button.setGeometry(QtCore.QRect(450, 60, 93, 28))
         self.y_move_button.setObjectName("y_move_button")
-        self.close_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.close_button = QtWidgets.QPushButton(self.centralwidget)#关闭触发
         self.close_button.setGeometry(QtCore.QRect(80, 160, 93, 28))
         self.close_button.setObjectName("close_button")
-        self.x_reset_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.x_reset_button = QtWidgets.QPushButton(self.centralwidget)#x复位触发
         self.x_reset_button.setGeometry(QtCore.QRect(330, 300, 93, 28))
         self.x_reset_button.setObjectName("x_reset_button")
-        self.y_reset_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.y_reset_button = QtWidgets.QPushButton(self.centralwidget)#y复位触发
         self.y_reset_button.setGeometry(QtCore.QRect(450, 300, 93, 28))
         self.y_reset_button.setObjectName("y_reset_button")
-        self.x_value = QtWidgets.QLineEdit(self.centralwidget)
+
+        self.x_value = QtWidgets.QLineEdit(self.centralwidget) #x轴移动量
         self.x_value.setGeometry(QtCore.QRect(340, 110, 91, 21))
         self.x_value.setObjectName("x_value")
         self.x_value.setText(str(0))
-        self.y_value = QtWidgets.QLineEdit(self.centralwidget)
+
+        self.y_value = QtWidgets.QLineEdit(self.centralwidget)#y轴移动量
         self.y_value.setGeometry(QtCore.QRect(450, 110, 91, 21))
         self.y_value.setObjectName("y_value")
         self.y_value.setText(str(0))
-        self.fouce_on_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.fouce_on_button = QtWidgets.QPushButton(self.centralwidget) #开启对焦触发
         self.fouce_on_button.setGeometry(QtCore.QRect(70, 300, 93, 28))
         self.fouce_on_button.setObjectName("fouce_on_button")
-        self.make_0_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.fouce_off_buttion = QtWidgets.QPushButton(self.centralwidget)#关闭对焦触发
+        self.fouce_off_buttion.setGeometry(QtCore.QRect(70, 340, 93, 28))
+        self.fouce_off_buttion.setObjectName("fouce_off_buttion")
+
+        self.make_0_button = QtWidgets.QPushButton(self.centralwidget) #make0对焦触发
         self.make_0_button.setGeometry(QtCore.QRect(210, 300, 93, 28))
         self.make_0_button.setObjectName("make_0_button")
-        self.z_value = QtWidgets.QLineEdit(self.centralwidget)
+
+        self.z_value = QtWidgets.QLineEdit(self.centralwidget) #Z轴移动量
         self.z_value.setGeometry(QtCore.QRect(220, 110, 91, 21))
         self.z_value.setObjectName("z_value")
         self.z_value.setText(str(0))
-        self.fluorsecent_value = QtWidgets.QLineEdit(self.centralwidget)
+
+        self.fluorsecent_value = QtWidgets.QLineEdit(self.centralwidget) #荧光电流值
         self.fluorsecent_value.setGeometry(QtCore.QRect(70, 430, 91, 21))
         self.fluorsecent_value.setObjectName("fluorsecent_value")
         self.fluorsecent_value.setText(str(10))
-        self.Brightfield_value = QtWidgets.QLineEdit(self.centralwidget)
+
+        self.Brightfield_value = QtWidgets.QLineEdit(self.centralwidget)#明场电流值
         self.Brightfield_value.setGeometry(QtCore.QRect(200, 430, 91, 21))
         self.Brightfield_value.setObjectName("Brightfield_value")
         self.Brightfield_value.setText(str(0.3))
-        self.y_positive_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.y_positive_button = QtWidgets.QPushButton(self.centralwidget)#Y轴正向移动触发
         self.y_positive_button.setGeometry(QtCore.QRect(450, 150, 93, 28))
         self.y_positive_button.setObjectName("y_positive_button")
-        self.y_negative_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.y_negative_button = QtWidgets.QPushButton(self.centralwidget)#Y轴负向移动触发
         self.y_negative_button.setGeometry(QtCore.QRect(450, 230, 93, 28))
         self.y_negative_button.setObjectName("y_negative_button")
-        self.x_negative_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.x_negative_button = QtWidgets.QPushButton(self.centralwidget)#X轴负向移动触发
         self.x_negative_button.setGeometry(QtCore.QRect(340, 230, 93, 28))
         self.x_negative_button.setObjectName("x_negative_button")
-        self.x_positive_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.x_positive_button = QtWidgets.QPushButton(self.centralwidget)#X轴正向移动触发
         self.x_positive_button.setGeometry(QtCore.QRect(340, 150, 93, 28))
         self.x_positive_button.setObjectName("x_positive_button")
-        self.z_up_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.z_up_button = QtWidgets.QPushButton(self.centralwidget)#z轴正向移动触发
         self.z_up_button.setGeometry(QtCore.QRect(220, 150, 93, 28))
         self.z_up_button.setObjectName("z_up_button")
         self.z_up_button.setText(str(0))
-        self.z_down_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.z_down_button = QtWidgets.QPushButton(self.centralwidget)#z轴负向移动触发
         self.z_down_button.setGeometry(QtCore.QRect(220, 230, 93, 28))
         self.z_down_button.setObjectName("z_down_button")
         self.z_down_button.setText(str(0))
-        self.fluorsecent_on_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.z_setp_value = QtWidgets.QLineEdit(self.centralwidget)  # z移动步长
+        self.z_setp_value.setGeometry(QtCore.QRect(220, 190, 91, 21))
+        self.z_setp_value.setObjectName("z_setp_value")
+        self.z_setp_value.setText(str(0.5))
+
+        self.y_setp_value = QtWidgets.QLineEdit(self.centralwidget)  # y移动步长
+        self.y_setp_value.setGeometry(QtCore.QRect(450, 190, 91, 21))
+        self.y_setp_value.setObjectName("y_setp_value")
+        self.y_setp_value.setText(str(0.1))
+
+        self.x_setp_value = QtWidgets.QLineEdit(self.centralwidget)  # x移动步长
+        self.x_setp_value.setGeometry(QtCore.QRect(340, 190, 91, 21))
+        self.x_setp_value.setObjectName("x_setp_value")
+        self.x_setp_value.setText(str(0.1))
+
+        self.z_display = QtWidgets.QLineEdit(self.centralwidget)  # 显示当前Z值
+        self.z_display.setGeometry(QtCore.QRect(220, 30, 91, 21))
+        self.z_display.setDragEnabled(False)
+        self.z_display.setObjectName("z_display")
+        self.z_display.setFocusPolicy(QtCore.Qt.NoFocus)
+
+        self.x_display = QtWidgets.QLineEdit(self.centralwidget)  # 显示当前X值
+        self.x_display.setGeometry(QtCore.QRect(340, 30, 91, 21))
+        self.x_display.setFocusPolicy(QtCore.Qt.NoFocus)
+        self.x_display.setDragEnabled(False)
+        self.x_display.setObjectName("x_display")
+
+        self.y_display = QtWidgets.QLineEdit(self.centralwidget)  # 显示当前Y值
+        self.y_display.setGeometry(QtCore.QRect(450, 30, 91, 21))
+        self.y_display.setDragEnabled(False)
+        self.y_display.setObjectName("y_display")
+        self.y_display.setFocusPolicy(QtCore.Qt.NoFocus)
+
+        self.fluorsecent_on_button = QtWidgets.QPushButton(self.centralwidget)#荧光开启触发
         self.fluorsecent_on_button.setGeometry(QtCore.QRect(70, 480, 93, 28))
         self.fluorsecent_on_button.setObjectName("fluorsecent_on_button")
-        self.Brightfield_on_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.Brightfield_on_button = QtWidgets.QPushButton(self.centralwidget)#明场开启触发
         self.Brightfield_on_button.setGeometry(QtCore.QRect(200, 480, 93, 28))
         self.Brightfield_on_button.setObjectName("Brightfield_on_button")
-        self.fluorsecent_off_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.fluorsecent_off_button = QtWidgets.QPushButton(self.centralwidget)#荧光关闭触发
         self.fluorsecent_off_button.setGeometry(QtCore.QRect(70, 520, 93, 28))
         self.fluorsecent_off_button.setObjectName("fluorsecent_off_button")
-        self.Brightfield_off_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.Brightfield_off_button = QtWidgets.QPushButton(self.centralwidget)#明场关闭触发
         self.Brightfield_off_button.setGeometry(QtCore.QRect(200, 520, 93, 28))
         self.Brightfield_off_button.setObjectName("Brightfield_off_button")
-        self.label_flur = QtWidgets.QLabel(self.centralwidget)
+
+        self.label_flur = QtWidgets.QLabel(self.centralwidget)#label 显示
         self.label_flur.setGeometry(QtCore.QRect(90, 400, 72, 20))
         self.label_flur.setObjectName("label_flur")
         self.label_Bright = QtWidgets.QLabel(self.centralwidget)
@@ -188,120 +250,111 @@ class Ui_MainWindow(object):
         self.label_wdi = QtWidgets.QLabel(self.centralwidget)
         self.label_wdi.setGeometry(QtCore.QRect(20, 300, 72, 20))
         self.label_wdi.setObjectName("label_wdi")
-        self.graphicsView = QtWidgets.QGraphicsView(self.centralwidget)
-        self.graphicsView.setGeometry(QtCore.QRect(610, 20, 630, 630))
-        self.graphicsView.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.graphicsView.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.graphicsView.verticalScrollBar().setSingleStep(0)
-        self.graphicsView.horizontalScrollBar().setSingleStep(0)
-        self.graphicsView.setObjectName("graphicsView")
-        self.bright_capture_button = QtWidgets.QPushButton(self.centralwidget)
-        self.bright_capture_button.setGeometry(QtCore.QRect(60, 570, 101, 31))
-        self.bright_capture_button.setObjectName("bright_capture_button")
-        self.fouce_off_buttion = QtWidgets.QPushButton(self.centralwidget)
-        self.fouce_off_buttion.setGeometry(QtCore.QRect(70, 340, 93, 28))
-        self.fouce_off_buttion.setObjectName("fouce_off_buttion")
-        self.fluor_capture_button = QtWidgets.QPushButton(self.centralwidget)
-        self.fluor_capture_button.setGeometry(QtCore.QRect(200, 570, 101, 31))
-        self.fluor_capture_button.setObjectName("fluor_capture_button")
-        self.zscan_button = QtWidgets.QPushButton(self.centralwidget)
-        self.zscan_button.setGeometry(QtCore.QRect(210, 340, 93, 28))
-        self.zscan_button.setObjectName("zscan_button")
-        self.scan_up_limit = QtWidgets.QLineEdit(self.centralwidget)
-        self.scan_up_limit.setGeometry(QtCore.QRect(450, 350, 91, 21))
-        self.scan_up_limit.setObjectName("scan_up_limit")
-        self.scan_up_limit.setText(str(360))
-        self.scan_down_limit = QtWidgets.QLineEdit(self.centralwidget)
-        self.scan_down_limit.setGeometry(QtCore.QRect(450, 380, 91, 21))
-        self.scan_down_limit.setObjectName("scan_down_limit")
-        self.scan_down_limit.setText(str(350))
         self.label_wdi_up = QtWidgets.QLabel(self.centralwidget)
         self.label_wdi_up.setGeometry(QtCore.QRect(410, 350, 72, 20))
         self.label_wdi_up.setObjectName("label_wdi_up")
         self.label_wdi_down = QtWidgets.QLabel(self.centralwidget)
         self.label_wdi_down.setGeometry(QtCore.QRect(410, 380, 72, 20))
         self.label_wdi_down.setObjectName("label_wdi_down")
-        self.scan_step_value = QtWidgets.QLineEdit(self.centralwidget)
-        self.scan_step_value.setGeometry(QtCore.QRect(450, 410, 91, 21))
-        self.scan_step_value.setObjectName("scan_step_value")
-        self.scan_step_value.setText(str(0.5))
         self.label_wdi_step = QtWidgets.QLabel(self.centralwidget)
         self.label_wdi_step.setGeometry(QtCore.QRect(410, 410, 72, 20))
         self.label_wdi_step.setObjectName("label_wdi_step")
-        self.z_setp_value = QtWidgets.QLineEdit(self.centralwidget)
-        self.z_setp_value.setGeometry(QtCore.QRect(220, 190, 91, 21))
-        self.z_setp_value.setObjectName("z_setp_value")
-        self.z_setp_value.setText(str(0.5))
-        self.y_setp_value = QtWidgets.QLineEdit(self.centralwidget)
-        self.y_setp_value.setGeometry(QtCore.QRect(450, 190, 91, 21))
-        self.y_setp_value.setObjectName("y_setp_value")
-        self.y_setp_value.setText(str(0.1))
-        self.x_setp_value = QtWidgets.QLineEdit(self.centralwidget)
-        self.x_setp_value.setGeometry(QtCore.QRect(340, 190, 91, 21))
-        self.x_setp_value.setObjectName("x_setp_value")
-        self.x_setp_value.setText(str(0.1))
-        self.z_display = QtWidgets.QLineEdit(self.centralwidget)
-        self.z_display.setGeometry(QtCore.QRect(220, 30, 91, 21))
-        self.z_display.setDragEnabled(False)
-        self.z_display.setObjectName("z_display")
-        self.z_display.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.continuous_capture_button_on = QtWidgets.QPushButton(self.centralwidget)
-        self.continuous_capture_button_on.setGeometry(QtCore.QRect(60, 620, 101, 31))
-        self.continuous_capture_button_on.setObjectName("continuous_capture_button_on")
-        self.x_display = QtWidgets.QLineEdit(self.centralwidget)
-        self.x_display.setGeometry(QtCore.QRect(340, 30, 91, 21))
-        self.x_display.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.x_display.setDragEnabled(False)
-        self.x_display.setObjectName("x_display")
-        self.y_display = QtWidgets.QLineEdit(self.centralwidget)
-        self.y_display.setGeometry(QtCore.QRect(450, 30, 91, 21))
-        self.y_display.setDragEnabled(False)
-        self.y_display.setObjectName("y_display")
-        self.y_display.setFocusPolicy(QtCore.Qt.NoFocus)
-        self.continuous_capture_button_off = QtWidgets.QPushButton(self.centralwidget)
-        self.continuous_capture_button_off.setGeometry(QtCore.QRect(200, 620, 101, 31))
-        self.continuous_capture_button_off.setObjectName("continuous_capture_button_off")
-        self.zscan_fcouse_value = QtWidgets.QLineEdit(self.centralwidget)
+
+        self.graphicsView = QtWidgets.QGraphicsView(self.centralwidget)#显示图像
+        self.graphicsView.setGeometry(QtCore.QRect(610, 20, 630, 630))
+        self.graphicsView.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.graphicsView.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.graphicsView.verticalScrollBar().setSingleStep(0)
+        self.graphicsView.horizontalScrollBar().setSingleStep(0)
+        self.graphicsView.setObjectName("graphicsView")
+
+        self.bright_capture_button = QtWidgets.QPushButton(self.centralwidget)#单帧拍图存储
+        self.bright_capture_button.setGeometry(QtCore.QRect(60, 570, 101, 31))
+        self.bright_capture_button.setObjectName("bright_capture_button")
+
+        self.zscan_button = QtWidgets.QPushButton(self.centralwidget)#明场z扫描对焦
+        self.zscan_button.setGeometry(QtCore.QRect(210, 340, 93, 28))
+        self.zscan_button.setObjectName("zscan_button")
+
+        self.scan_up_limit = QtWidgets.QLineEdit(self.centralwidget)  #z扫描上限
+        self.scan_up_limit.setGeometry(QtCore.QRect(450, 350, 91, 21))
+        self.scan_up_limit.setObjectName("scan_up_limit")
+        self.scan_up_limit.setText(str(360))
+
+        self.scan_down_limit = QtWidgets.QLineEdit(self.centralwidget)#z扫描下限
+        self.scan_down_limit.setGeometry(QtCore.QRect(450, 380, 91, 21))
+        self.scan_down_limit.setObjectName("scan_down_limit")
+        self.scan_down_limit.setText(str(350))
+
+
+        self.scan_step_value = QtWidgets.QLineEdit(self.centralwidget)#z扫描步长
+        self.scan_step_value.setGeometry(QtCore.QRect(450, 410, 91, 21))
+        self.scan_step_value.setObjectName("scan_step_value")
+        self.scan_step_value.setText(str(0.5))
+
+        self.zscan_fcouse_value = QtWidgets.QLineEdit(self.centralwidget)#Z扫描对焦值
         self.zscan_fcouse_value.setGeometry(QtCore.QRect(330, 350, 61, 21))
         self.zscan_fcouse_value.setObjectName("zscan_fcouse_value")
-        self.exposure_time = QtWidgets.QLineEdit(self.centralwidget)
+
+        self.continuous_capture_button_on = QtWidgets.QPushButton(self.centralwidget)#连续采集开启
+        self.continuous_capture_button_on.setGeometry(QtCore.QRect(60, 620, 101, 31))
+        self.continuous_capture_button_on.setObjectName("continuous_capture_button_on")
+
+        self.continuous_capture_button_off = QtWidgets.QPushButton(self.centralwidget)#连续采集关闭
+        self.continuous_capture_button_off.setGeometry(QtCore.QRect(200, 620, 101, 31))
+        self.continuous_capture_button_off.setObjectName("continuous_capture_button_off")
+
+
+        self.exposure_time = QtWidgets.QLineEdit(self.centralwidget) #曝光时间
         self.exposure_time.setGeometry(QtCore.QRect(310, 430, 80, 25))
         self.exposure_time.setObjectName("exposure_time")
         self.exposure_time_label = QtWidgets.QLabel(self.centralwidget)
         self.exposure_time_label.setGeometry(QtCore.QRect(310, 390, 81, 31))
         self.exposure_time_label.setObjectName("exposure_time_label")
-        self.shading_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.shading_button = QtWidgets.QPushButton(self.centralwidget)#照明测量触发
         self.shading_button.setGeometry(QtCore.QRect(450, 570, 121, 31))
         self.shading_button.setObjectName("shading_button")
-        self.Resolution_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.Resolution_button = QtWidgets.QPushButton(self.centralwidget)#分辨率测试触发
         self.Resolution_button.setGeometry(QtCore.QRect(450, 617, 121, 31))
         self.Resolution_button.setObjectName("Resolution_button")
-        self.Nine_View_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.Nine_View_button = QtWidgets.QPushButton(self.centralwidget)#显示9宫格触发
         self.Nine_View_button.setGeometry(QtCore.QRect(200, 570, 101, 31))
         self.Nine_View_button.setObjectName("Resolution_button")
-        self.cal_rotation_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.cal_rotation_button = QtWidgets.QPushButton(self.centralwidget)#相机旋转测试
         self.cal_rotation_button.setGeometry(QtCore.QRect(310, 525, 121, 31))
         self.cal_rotation_button.setObjectName("Resolution_button")
-        self.z_scan_image_button = QtWidgets.QPushButton(self.centralwidget)
-        self.z_scan_image_button.setGeometry(QtCore.QRect(310, 570, 121, 31))
-        self.z_scan_image_button.setObjectName("z_scan_image_button")
-        self.static_focus_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.WDI_test_button = QtWidgets.QPushButton(self.centralwidget) #WDI对焦精度测试
+        self.WDI_test_button.setGeometry(QtCore.QRect(310, 570, 121, 31))
+        self.WDI_test_button.setObjectName("WDI_test_button")
+
+        self.static_focus_button = QtWidgets.QPushButton(self.centralwidget)#WDI重复对焦精度测试
         self.static_focus_button.setGeometry(QtCore.QRect(310, 620, 121, 31))
         self.static_focus_button.setObjectName("static_focus_button")
-        self.Background_light_test_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.Background_light_test_button = QtWidgets.QPushButton(self.centralwidget) #背景值对焦精度测试
         self.Background_light_test_button.setGeometry(QtCore.QRect(310, 480, 130, 31))
         self.Background_light_test_button.setObjectName("Background_light_test_button")
-        self.flat_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.flat_button = QtWidgets.QPushButton(self.centralwidget)#调平测试
         self.flat_button.setGeometry(QtCore.QRect(450, 480, 101, 31))
         self.flat_button.setObjectName("flat_button")
-        self.astigmatism_button = QtWidgets.QPushButton(self.centralwidget)
+
+        self.astigmatism_button = QtWidgets.QPushButton(self.centralwidget)#像散测试
         self.astigmatism_button.setGeometry(QtCore.QRect(450, 530, 101, 31))
         self.astigmatism_button.setObjectName("astigmatism_button")
         self.exposure_time.setText(str(0.003))
-        self.textBrowser = QtWidgets.QTextBrowser(self.centralwidget)
+
+        self.textBrowser = QtWidgets.QTextBrowser(self.centralwidget)#内容显示
         self.textBrowser.setGeometry(QtCore.QRect(60, 670, 400, 100))
         self.textBrowser.setObjectName("textBrowser")
+
         MainWindow.setCentralWidget(self.centralwidget)
+
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1545, 26))
         self.menubar.setObjectName("menubar")
@@ -309,7 +362,9 @@ class Ui_MainWindow(object):
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
-        self.retranslateUi(MainWindow)
+
+
+        self.retranslateUi(MainWindow)  #触发进程
         self.close_button.clicked.connect(self.exit_all)
         self.chip_in_button.clicked.connect(self.chip_in)
         self.chip_out_button.clicked.connect(self.chip_out)
@@ -351,21 +406,16 @@ class Ui_MainWindow(object):
         self.Resolution_button.clicked.connect(self.measure_resolution)
         self.cal_rotation_button.clicked.connect(self.measure_rotation)
         self.static_focus_button.clicked.connect(self.static_focus)
-        self.z_scan_image_button.clicked.connect(self.sacn_z)
+        self.WDI_test_button.clicked.connect(self.WDI_test)
         self.zscan_button.clicked.connect(self.zscan_start)
         self.astigmatism_button.clicked.connect(self.means_astigmatism)
-
-
         self.get_x_display()
         self.get_y_display()
         self.get_z_display()
 
-        #self.start()
-
-    #get_exposure_time=
 
 
-    def zscan_start(self):
+    def zscan_start(self):# z扫描对焦
 
         C.sendandrecv({"msgID": 1, "CCP": "LED_G SET 1 %.1f" % 0.2})
         C.sendandrecv({"CCP": "CAM SET 2 %.3f" % 0.002})
@@ -380,7 +430,6 @@ class Ui_MainWindow(object):
         C.sendandrecv({"CCP": "LED_G CLOSE"})
         C.sendandrecv({"CCP": "WDI SET 4 %f TIMEOUT 1000" % zFocus})
         self.zscan_fcouse_value.setText(str(zFocus))
-
         self.get_z_display()
 
 
@@ -388,16 +437,13 @@ class Ui_MainWindow(object):
         images = []
         fv = np.array([])
         zs = np.arange(start, end, step)
-        # data = C.sendandrecv({"msgID": 1,"CCP": "PI MOVTO %.2f" % zs[0]})
         C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 0 TIMEOUT 1000"})  # WDI
-        print('AutoFocus Off!')  # WDI
-        data = C.sendandrecv({"msgID": 1, "CCP": "WDI SET 4 %f TIMEOUT 1000" % zs[0]})  # WDI
+        C.sendandrecv({"msgID": 1, "CCP": "WDI SET 4 %f TIMEOUT 1000" % zs[0]})  # WDI
         time.sleep(0.1)
 
         for z in zs:
-            data = C.sendandrecv({"CCP": "WDI SET 4 %f TIMEOUT 1000" % z}) # WDI
-            # data = C.sendandrecv({"CCP": "CAM_CAPTURER TRIGGERPHOTO 1 0 0"})
-            data = C.sendandrecv({"CCP": "WDI_CAPTURER TRIGGERPHOTO 1 0 0"})  # WDI
+            C.sendandrecv({"CCP": "WDI SET 4 %f TIMEOUT 1000" % z}) # WDI
+            C.sendandrecv({"CCP": "WDI_CAPTURER TRIGGERPHOTO 1 0 0"})  # WDI
             data = C.sendandrecv({"CCP": "CAM GETIMAGE"})
             img = com.data2image(data)
             images.append(img)
@@ -406,8 +452,6 @@ class Ui_MainWindow(object):
         if show:
             plt.plot(zs, fv)
             plt.show()
-
-        print('zFocus=%f' % zs[fv.argmax()])  # WDI
         zfouse=zs[fv.argmax()]
         zfouse=round(zfouse, 3)
         return zs, fv, images,zfouse
@@ -440,7 +484,6 @@ class Ui_MainWindow(object):
         # 计时器每秒计数
         self.timer2.stop()
         self.timer.start(30)
-
         self.workThread.start()
 
 
@@ -863,7 +906,7 @@ class Ui_MainWindow(object):
  #              C.sendandrecv({"CCP": "WDI SET 4 %f TIMEOUT 1000" % (zData_down )})
         C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 0 TIMEOUT 1000"})  # AutoFocus Off!
 
-    def sacn_z(self):
+    def WDI_test(self):
         self.close_all
         zRange=6
         zStep=0.2
@@ -893,9 +936,6 @@ class Ui_MainWindow(object):
         resultfolder = com.setOutputFolder(os.path.join('output\z_get_imge'))
         result_path = resultfolder
         save_path = resultfolder
-
-
-
 
         Zscan_XY.Zscan_data_extract_singlechip(runID, result_path, save_path)
 
@@ -1381,7 +1421,6 @@ class Ui_MainWindow(object):
         self.label_wdi.setText(_translate("MainWindow", "WDI"))
         self.bright_capture_button.setText(_translate("MainWindow", "单帧采集"))
         self.fouce_off_buttion.setText(_translate("MainWindow", "关闭WDI对焦"))
-        #self.fluor_capture_button.setText(_translate("MainWindow", "荧光单帧采集"))
         self.zscan_button.setText(_translate("MainWindow", "z_scan"))
         self.label_wdi_up.setText(_translate("MainWindow", "上"))
         self.label_wdi_down.setText(_translate("MainWindow", "下"))
