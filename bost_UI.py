@@ -384,10 +384,10 @@ class Ui_MainWindow(object):
         self.timer2 = QTimer()
         self.workThread = WorkThread()
         self.workThread2 = WorkThread2()
-        self.continuous_capture_button_on.clicked.connect(self.work)
+        self.continuous_capture_button_on.clicked.connect(self.continuous_capture_process)
         self.timer.timeout.connect(self.start_camer)
         self.timer2.timeout.connect(self.start_nine)
-        self.Nine_View_button.clicked.connect(self.work2)
+        self.Nine_View_button.clicked.connect(self.Nine_View_capture_process)
         self.continuous_capture_button_off.clicked.connect(self.stop_camer)
         self.z_read.sinOut_z.connect(self.diplay_z_value)  # 将线程信号连接到槽函数
         #self.z_read.sinOut_x.connect(self.get_x_display)  # 将线程信号连接到槽函数
@@ -415,7 +415,7 @@ class Ui_MainWindow(object):
 
 
 
-    def zscan_start(self):# z扫描对焦
+    def zscan_start(self):# z扫描对焦并移动到最佳对焦位置
 
         C.sendandrecv({"msgID": 1, "CCP": "LED_G SET 1 %.1f" % 0.2})
         C.sendandrecv({"CCP": "CAM SET 2 %.3f" % 0.002})
@@ -426,14 +426,14 @@ class Ui_MainWindow(object):
         up=float(self.scan_up_limit.text())
         down=float(self.scan_down_limit.text())
         step=float(self.scan_step_value.text())
-        z, fv, imgs, zFocus = self.zscan(down, up, step, show=True)
+        z, fv, imgs, zFocus = self.zscan_get_focus(down, up, step, show=True)
         C.sendandrecv({"CCP": "LED_G CLOSE"})
         C.sendandrecv({"CCP": "WDI SET 4 %f TIMEOUT 1000" % zFocus})
         self.zscan_fcouse_value.setText(str(zFocus))
         self.get_z_display()
 
 
-    def zscan(self,start, end, step, show=False, **kwargs):
+    def zscan_get_focus(self,start, end, step, show=False, **kwargs):#z扫描对焦获得最佳位置
         images = []
         fv = np.array([])
         zs = np.arange(start, end, step)
@@ -457,7 +457,7 @@ class Ui_MainWindow(object):
         return zs, fv, images,zfouse
 
 
-    def show_image(self, image, scale=0.3):
+    def show_image(self, image, scale=0.3): #显示图像
         x = image.shape[1]  # 获取图像大小
         y = image.shape[0]
         self.zoomscale = float(scale)  # 图片放缩尺度
@@ -477,17 +477,17 @@ class Ui_MainWindow(object):
         self.scene.addItem(self.item)
         self.graphicsView.setScene(self.scene)
 
-    def start(self):
-        self.z_read.start()
+    # def start(self):
+    #     self.z_read.start()
 
-    def work(self):
+    def continuous_capture_process(self): #连续采集进程
         # 计时器每秒计数
         self.timer2.stop()
         self.timer.start(30)
         self.workThread.start()
 
 
-    def work2(self):
+    def Nine_View_capture_process(self):#9宫格连续采集进程
         # 计时器每秒计数
         self.stop_camer
         self.timer2.start(30)
@@ -505,26 +505,26 @@ class Ui_MainWindow(object):
         self.timer.stop()
         self.timer2.stop()
 
-    def get_z_display(self):
+    def get_z_display(self): #获取z值
         zData = C.sendandrecv({"CCP": "WDI GET 4 TIMEOUT 1000"})
         # print('wdifocuse=%fum' % zData[b'data'][0])
         z = format(zData[b'data'][0], '.3f')
         self.z_display.setText(z)
 
-    def diplay_z_value(self, str):
+    def diplay_z_value(self, str):#显示z位置
         self.z_display.setText(str)
 
-    def get_x_display(self):
+    def get_x_display(self):#显示x位置
         xData = C.sendandrecv({"CCP": "SERVO01 GET 9 TIMEOUT 5000"})
         x = format(xData[b'data'][0], '.3f')
         self.x_display.setText(x)
 
-    def get_y_display(self):
+    def get_y_display(self):#显示y位置
         yData = C.sendandrecv({"CCP": "SERVO02 GET 9 TIMEOUT 5000"})
         y = format(yData[b'data'][0], '.3f')
         self.y_display.setText(y)
 
-    def init_ds(self):
+    def init_ds(self):#初始化ds
         outputfolder = com.setOutputFolder('output')
         logger = com.createLogger(outputfolder)
         com.logger = logger
@@ -555,17 +555,19 @@ class Ui_MainWindow(object):
         self.get_x_display()
         self.textBrowser.clear()
         self.textBrowser.setText('进仓结束')
+
     def chip_out(self):
         # Chip out
         C.sendandrecv({"CCP": "SERVO01 RESET"})
         C.sendandrecv({"CCP": "SERVO02 RESET"})
-        time.sleep(10)
+        time.sleep(5)
         C.sendandrecv({"CCP": "MOTOR_C02 MOV 1"})
-        time.sleep(15)
+        time.sleep(10)
         C.sendandrecv({"CCP": "MOTOR_C01 MOV 1"})
 
         self.textBrowser.clear()
         self.textBrowser.setText('出仓结束')
+
     def x_move_resets(self):
         C.sendandrecv({"CCP": "SERVO01 RESET"})
         self.get_x_display()
@@ -693,7 +695,7 @@ class Ui_MainWindow(object):
         # cv2.imwrite('123.tif',nine_view_image)
         self.show_image(nine_view_image, 1)
 
-    def save_image_act(self):
+    def save_image_act(self):  #存储当前图像
         expTime = float(self.exposure_time.text())
         image = self.cap_image(expTime, 0)
         image = calculation_module.image_16_8(image)
@@ -708,9 +710,11 @@ class Ui_MainWindow(object):
         self.textBrowser.setText('自动对焦关闭')
     def fouce_on(self):
         C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 1 TIMEOUT 1000"})
-        self.start()
+
+        self.z_read.start()
         self.textBrowser.clear()
         self.textBrowser.setText('自动对焦开启')
+
     def make_0_start(self):
         C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 0 TIMEOUT 1000"})
         print('AutoFocus Off!')
@@ -719,10 +723,7 @@ class Ui_MainWindow(object):
         self.textBrowser.clear()
         self.textBrowser.setText('make0 完毕')
     def setBackground(self, color):
-        """设置背景颜色
-        :param color: 背景颜色
-        :type color: QColor or str or GlobalColor
-        """
+
         if isinstance(color, QColor):
             self.graphicsView.setBackgroundBrush(color)
         elif isinstance(color, (str, Qt.GlobalColor)):
@@ -1434,7 +1435,7 @@ class Ui_MainWindow(object):
         self.Nine_View_button.setText(_translate("MainWindow", "九宫格显示"))
         self.Background_light_test_button.setText(_translate("MainWindow", "背景杂光测试"))
         self.cal_rotation_button.setText(_translate("MainWindow", "相机旋转角度"))
-        self.z_scan_image_button.setText(_translate("MainWindow", "对焦精度测量"))
+        self.WDI_test_button.setText(_translate("MainWindow", "对焦精度测量"))
         self.static_focus_button.setText(_translate("MainWindow", "重复对焦精度"))
         self.astigmatism_button.setText(_translate("MainWindow", "像散测试"))
 
