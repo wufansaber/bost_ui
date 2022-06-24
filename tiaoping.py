@@ -189,13 +189,13 @@ class Ui_Tiaoping(object):
         file = os.path.join(move_localfolder, 'tiaoping.txt')
         f = open(file, 'w')
         #C = DDS.NSDS()
-        Xoffset = 3.0
-        Yoffset = 1.0
-        x = Xoffset + 17.98 / 2   # x方向调节距离[-9,9],step>0.67
-        y = Yoffset + 48.6 / 2  # y方向调节距离[-24,24],step>0.67
-        C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 0 TIMEOUT 1000"})  # WDI
-        C.sendandrecv({"CCP": "SERVO01 MOV 0 %.2f 0" % (x)})
-        C.sendandrecv({"CCP": "SERVO02 MOV 0 %.2f 0" % (y)})
+        #Xoffset = 3.0
+        #Yoffset = 1.0
+        #x = Xoffset + 17.98 / 2   # x方向调节距离[-9,9],step>0.67
+        #y = Yoffset + 48.6 / 2  # y方向调节距离[-24,24],step>0.67
+        #C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 0 TIMEOUT 1000"})  # WDI
+        #C.sendandrecv({"CCP": "SERVO01 MOV 0 %.2f 0" % (x)})
+        #C.sendandrecv({"CCP": "SERVO02 MOV 0 %.2f 0" % (y)})
         localtime0 = time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())
         move_localfolder = com.setOutputFolder('output\BOST_FOR_tiaoping/' + localtime0)
         file = os.path.join(move_localfolder, 'tiaoping.txt')

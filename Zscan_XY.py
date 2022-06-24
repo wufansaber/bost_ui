@@ -75,7 +75,7 @@ def Zscan_data_extract_singlechip(runID,result_path,save_path):
         shift_info_sml[n,:]=[fv_shift1,fv_shift2,WDI_shift]
     plt.tight_layout()
     plt.subplots_adjust(left=None, bottom=None, right=None, top=None,wspace=None, hspace=0.15)
-    plt.savefig(os.path.join(save_path1,'fv_curve_'+runID+'.jpg'),dpi=500,bbox_inches = 'tight')
+    plt.savefig(os.path.join(save_path1,'fv_curve_'+runID+'.png'),dpi=500,bbox_inches = 'tight')
     plt.close()
     #plt.show()
 
@@ -133,12 +133,12 @@ def Zscan_data_extract_singlechip(runID,result_path,save_path):
 
     plt.tight_layout()
     plt.subplots_adjust(left=None, bottom=None, right=None, top=None,wspace=None, hspace=0.15)
-    plt.savefig(os.path.join(save_path1,'offset_summary_'+runID+'.jpg'),dpi=500,bbox_inches = 'tight')
+    plt.savefig(os.path.join(save_path1,'offset_summary_'+runID+'.png'),dpi=500,bbox_inches = 'tight')
     plt.close()
     #plt.show()
 
     '''shift spatial figure'''
-    plt.figure(figsize=(30,6))
+    plt.figure(figsize=(40,10))
     ax1 = plt.subplot(1,5,1)
     '''关闭裁剪功能'''
     plt.scatter(X,Y,s=300,c=Z,clip_on = False)
@@ -199,7 +199,7 @@ def Zscan_data_extract_singlechip(runID,result_path,save_path):
     plt.suptitle(runID.replace("_","-"))
     plt.tight_layout()
     plt.subplots_adjust(top=0.85)
-    plt.savefig(os.path.join(save_path1,'offset_spatialinfo_'+runID+'.jpg'),dpi=500,bbox_inches = 'tight')
+    plt.savefig(os.path.join(save_path1,'offset_spatialinfo_'+runID+'.png'),dpi=500,bbox_inches = 'tight')
     plt.close()
     #plt.show()
 
@@ -217,16 +217,15 @@ def Zscan_data_extract_singlechip(runID,result_path,save_path):
 
 
 
-
-
-
-
 def F_getFvShift(C_BF,C_FF):
     step=0.2
     indexLength=len(C_BF)
     FF_max_value=np.max(C_FF)
     FF_max_pos=np.argmax(C_FF)
-    BF_1=C_BF[0:FF_max_pos]
+    if FF_max_pos>0:
+        BF_1=C_BF[0:FF_max_pos]
+    else:
+        BF_1 = C_BF[FF_max_pos]
     BF_2=C_BF[FF_max_pos:indexLength]
     BF_max_value1=np.max(BF_1)
     BF_max_pos1=np.argmax(BF_1)
