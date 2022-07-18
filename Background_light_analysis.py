@@ -39,11 +39,11 @@ def defect_detection(im1):
 
 def backguround_ligt_result(filepath):
     #原图路径
-    #filepath=r'\\10.0.32.20\RnD_Temp\wufan\64\Background_light_test\2022_02_09_11_00_14'
+    #filepath=r'E:\bost_ui\output\Background_light_test\2022_07_07_13_56_39'
     #存图路径
     savepath=filepath
     #存图名称
-    savename='底板.tiff'
+    savename='merge.tiff'
     #起始tile，即拼图左上角的tile的编号
     tile1 = 1
     #X>=2，行数
@@ -93,9 +93,11 @@ def backguround_ligt_result(filepath):
     for i in range(1,X*Y+1):
         print(i)
         filename='wdi_tile%04d_01.tiff'%T[i-1]
+
         imgname=os.path.join(filepath,filename)
         if os.path.exists(imgname):
-            img = mpimg.imread(imgname)
+            #img = mpimg.imread(imgname)
+            img = cv2.imread(imgname,0)
             img1 = cv2.imread(imgname)
             max_area,number=defect_detection(img1)
             if max_area!='':
@@ -123,15 +125,16 @@ def backguround_ligt_result(filepath):
     maxarea=np.max(max_area_list)
     meanarea=np.mean(max_area_list)
     merge = np.asanyarray(merge, dtype="uint16")
-    mean_merge=np.mean(merge[:,:])
-    plt.figure()
-    ax1=sns.heatmap(merge)
+    #mean_merge=np.mean(merge[:,:])
+    cv2.imwrite(os.path.join(savepath, savename),merge)
+    #plt.figure()
+    #ax1=sns.heatmap(merge)
     #plt.show()
-    plt.savefig(os.path.join(savepath,savename))
-    plt.close()
+    #plt.savefig(os.path.join(savepath,savename))
+    #plt.close()
     with open (os.path.join(savepath,'Background_light_test.txt'),'w') as fid:
         fid.write("最大亮域面积: \t %.4f\n"%maxarea)
-        fid.write("平均值: \t %.4f\n"%mean_merge)
+        #fid.write("平均值: \t %.4f\n"%mean_merge)
         fid.write("平均亮面积: \t %.4f\n"%meanarea)
         fid.write("亮区域个数: \t %.4f\n"%sum_number)
 

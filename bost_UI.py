@@ -835,10 +835,13 @@ class Ui_MainWindow(object):
         y = Yoffset + 48.6 / 2
         C.sendandrecv({"CCP": "SERVO01 MOV 0 %.2f 0" % (x)})
         C.sendandrecv({"CCP": "SERVO02 MOV 0 %.2f 0" % (y)})
-        outputfolder = com.setOutputFolder('output\Background_light_test')
+        localtime0 = time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())
+        move_localfolder = com.setOutputFolder('output\Background_light_test\\light\\' + localtime0)
+        outputfolder = com.setOutputFolder('output\Background_light_test\\nolight\\' + localtime0)
         output_img = os.path.join(outputfolder, 'no_light.tiff')
         expTime = 0.03
         img = self.cap_image(expTime, 1, output_img)
+        img=img[2:2045,2:2045]
         mean_img = np.mean(img)
         max = np.max(img)
         min = np.min(img)
@@ -847,8 +850,7 @@ class Ui_MainWindow(object):
         f.close()
         FF_time=0.03
         FF_LED=10
-        localtime0 = time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())
-        move_localfolder = com.setOutputFolder('output\Background_light_test\\' + localtime0)
+
         self.YX_scan_FF_image(FF_time,FF_LED,move_localfolder)
         self.textBrowser.clear()
         self.textBrowser.setText('背景光测试结束')

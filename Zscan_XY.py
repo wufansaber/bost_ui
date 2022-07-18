@@ -52,7 +52,7 @@ def Zscan_data_extract_singlechip(runID,result_path,save_path):
             Z[n]=C[:,0][max_pos]
             Fv_max[n]=max_value
             fv_shift1,fv_shift2,WDI_shift=F_getFvShift(C[:,1],C[:,3])
-            plt.title('Fv_WAV_tile%d,shift:%d,%d,WDI_shift:%.1f'%(n,fv_shift1,fv_shift2,WDI_shift))
+            plt.title('Fv_WAV_tile%d,shift:%.2f,%.2f,WDI_shift:%.2f'%(n,fv_shift1,fv_shift2,WDI_shift))
             shift_info_wav[n,:]=[fv_shift1,fv_shift2,WDI_shift]
 
             plt.subplot(5,4,2*(n+1))
@@ -62,7 +62,7 @@ def Zscan_data_extract_singlechip(runID,result_path,save_path):
             max_pos=np.argmax(C[:,4],axis=0)
             plt.plot([C[:,0][max_pos],C[:,0][max_pos]],[0,max_value])
             fv_shift1,fv_shift2,WDI_shift=F_getFvShift(C[:,2],C[:,4])
-            plt.title('Fv_SML_tile%d,shift:%d,%d,WDI_shift:%.1f'%(n,fv_shift1,fv_shift2,WDI_shift))
+            plt.title('Fv_SML_tile%d,shift:%.2f,%.2f,WDI_shift:%.2f'%(n,fv_shift1,fv_shift2,WDI_shift))
             shift_info_sml[n,:]=[fv_shift1,fv_shift2,WDI_shift]
         max_value=np.max(C[:,3])
         max_pos=np.argmax(C[:,4],axis=0)
