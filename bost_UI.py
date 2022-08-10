@@ -654,10 +654,8 @@ class Ui_MainWindow(object):
 
     def sig_image_act(self):
         expTime = float(self.exposure_time.text())
-
         localtime0 = time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())
         localfolder = com.setOutputFolder('output/')
-
         output_img = os.path.join(localfolder, '%s.tiff' % (localtime0))
         image = self.cap_image(expTime, 1, output_img)
         image = calculation_module.image_16_8(image)
@@ -930,10 +928,7 @@ class Ui_MainWindow(object):
             y = xy[1]
             C.sendandrecv({"CCP": "SERVO01 MOV 0 %.2f 0" % (x)})
             C.sendandrecv({"CCP": "SERVO02 MOV 0 %.2f 0" % (y)})
-            C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 1 TIMEOUT 1000"})  # AutoFocus On!
-            time.sleep(0.5)
-            C.sendandrecv({"CCP": "WDI GET 5 TIMEOUT 1000"})
-            C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 0 TIMEOUT 1000"})  # AutoFocus Off!
+
             self.z_get_imge(x, y, zRange, zStep, FF_expTime, BF_expTime, BFLEDcurrent, FFLEDcurrent, runID)
 
 
@@ -945,10 +940,6 @@ class Ui_MainWindow(object):
 
     def z_get_imge(self,x,y,zRange,zStep,FF_expTime,BF_expTime,BFLEDcurrent,FFLEDcurrent,runID):
 
-        zData = C.sendandrecv({"CCP": "WDI GET 4 TIMEOUT 1000"})
-        # print('wdifocuse=%fum' % zData[b'data'][0])
-        z = format(zData[b'data'][0], '.3f')
-        zfocus = float(z)
        # greenLEDcurrent = float(self.Brightfield_value.text())
        # blueLEDcurrent = float(self.fluorsecent_value.text())
 
@@ -976,6 +967,16 @@ class Ui_MainWindow(object):
             print('cycle:%d\tAt:%s' % (cycle, localtime))
             f.write('cycle:%d\tAt:%s\n' % (cycle, localtime))
             f.close()
+
+            C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 1 TIMEOUT 1000"})  # AutoFocus On!
+            time.sleep(0.5)
+            C.sendandrecv({"CCP": "WDI GET 5 TIMEOUT 1000"})
+            zData = C.sendandrecv({"CCP": "WDI GET 4 TIMEOUT 1000"})
+            # print('wdifocuse=%fum' % zData[b'data'][0])
+            z = format(zData[b'data'][0], '.3f')
+            zfocus = float(z)
+            C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 0 TIMEOUT 1000"})  # AutoFocus Off!
+
             with open(file, 'a') as f:
                 imgpath = localfolder + '/img_cycle%02d' % (cycle)
                 if not os.path.exists(imgpath):
@@ -989,12 +990,13 @@ class Ui_MainWindow(object):
 
                 C.sendandrecv({"CCP": "CAM SET 2 %.3f" % BF_expTime})
                 C.sendandrecv({"CCP": "LED_G OPEN"})
-                C.sendandrecv({"CCP": "WDI_CAPTURER TRIGGERPHOTO 0 0 0"})  # 返回焦点数
+                #focus_z=C.sendandrecv({"CCP": "WDI_CAPTURER TRIGGERPHOTO 0 0 0"})  # 返回焦点数
 
                 data = C.sendandrecv({"CCP": "CAM GETIMAGE"})
                 img = com.data2image(data)
+                imgcrop = img[624:1424, 624:1424]
                 cv2.imwrite(
-                    os.path.join(localfolder, 'img_cycle_%02d-BF_z%.2fum.tiff' % (cycle, zfocus)), img)
+                    os.path.join(localfolder, 'img_cycle_%02d-BF_z%.2fum.tiff' % (cycle, zfocus)), imgcrop)
                 C.sendandrecv({"CCP": "LED_G CLOSE"})
 
                 C.sendandrecv({"CCP": "CAM SET 2 %.3f" % FF_expTime})
@@ -1003,14 +1005,26 @@ class Ui_MainWindow(object):
                 #             data = C.sendandrecv({"CCP": "CAM_CAPTURER TRIGGERPHOTO 0 0 0"})
                 data = C.sendandrecv({"CCP": "CAM GETIMAGE"})
                 img = com.data2image(data)
+                imgcrop = img[624:1424, 624:1424]
+                fvB = calculation_module.SML(img)
                 cv2.imwrite(
-                    os.path.join(localfolder, 'img_cycle_%02d-FF_z%.2fum.tiff' % (cycle, zfocus)), img)
+                    os.path.join(localfolder, 'img_cycle_%02d-FF_z%.2fum.tiff' % (cycle, zfocus)), imgcrop)
                 C.sendandrecv({"CCP": "LED_B CLOSE"})
                 #time.sleep(0.02)
 
                 f.write('z\t G_WAV\t G_SML\t B_WAV\t B_SML\n')
-                C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 0 TIMEOUT 1000"})
-                print('AutoFocus Off!')
+                #C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 0 TIMEOUT 1000"})
+                if fvB<0.2:
+                    C.sendandrecv({"CCP": "WDI SET 4 %f TIMEOUT 1000" % (z+40)})
+                    C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 1 TIMEOUT 1000"})  # AutoFocus On!
+                    time.sleep(0.5)
+                    C.sendandrecv({"CCP": "WDI GET 5 TIMEOUT 1000"})
+                    zData = C.sendandrecv({"CCP": "WDI GET 4 TIMEOUT 1000"})
+                    # print('wdifocuse=%fum' % zData[b'data'][0])
+                    z = format(zData[b'data'][0], '.3f')
+                    zfocus = float(z)
+                    C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 0 TIMEOUT 1000"})  # AutoFocus Off!
+
 
                 for z in np.arange(zfocus - zRange, zfocus + zRange + zStep, zStep):
                     C.sendandrecv({"CCP": "WDI SET 4 %f TIMEOUT 1000" % z})  # 运动到z
@@ -1043,7 +1057,7 @@ class Ui_MainWindow(object):
                     fvB_ML = calculation_module.SML(imgsmall)  # 反应照片清晰度的对焦值，改进的拉普拉斯算子
                     #                 print('pdB=%.3f\t fvB_WT=%.3f\t fvB_ML=%.3f' %(data[b'data'][0],fvB_WT,fvB_ML))
                     cv2.imwrite(os.path.join(imgpath, 'FFimg_cycle_%02d_z%.2fum_fv%.3f.tiff' % (
-                        cycle, z, fvB_ML)), imgcrop)
+                        cycle, z, fvB_ML)), img)
 
                     #time.sleep(0.02)
                     print('z=%.3f\t G_WAV=%.3f\t G_SML=%.3f\t B_WAV=%.3f\t B_SML=%.3f' % (
@@ -1325,6 +1339,11 @@ class Ui_MainWindow(object):
         f = open(file, 'a')
         self.textBrowser.clear()
         self.textBrowser.setText('分辨力测试结束')
+        # max_value_x = max(Modulation_x_list[:, 0])
+        index_x = np.argmax(Modulation_x_list[:, 0])
+        # max_value_y = max(Modulation_x_list[:, 0])
+        index_y = np.argmax(Modulation_y_list[:, 0])
+
         for i in range(9):
             max_value_x[0, i] = max(Modulation_x_list[:, i])
             max_value_y[0, i] = max(Modulation_y_list[:, i])
@@ -1341,8 +1360,9 @@ class Ui_MainWindow(object):
         # print('wdifocuse=%fum' % zData[b'data'][0])
         z = format(zData[b'data'][0], '.3f')
         zfocus = float(z)
-        blueLEDcurrent = 3
-        C.sendandrecv({"msgID": 1, "CCP": "LED_B SET 1 %.1f" % blueLEDcurrent})
+        #blueLEDcurrent = 10
+        FFLEDcurrent = float(self.fluorsecent_value.text())
+        C.sendandrecv({"msgID": 1, "CCP": "LED_B SET 1 %.1f" % FFLEDcurrent})
         C.sendandrecv({"CCP": "CAM SET 3 0 0 2048 2048"})
         zRange = 5
         zStep = 0.2  # um
@@ -1351,7 +1371,6 @@ class Ui_MainWindow(object):
         localfolder = com.setOutputFolder(os.path.join('output\measure_resolution' + '/' + name))
 
         for cycle in range(1):
-
             imgpath = localfolder
             if not os.path.exists(imgpath):
                 os.mkdir(imgpath)

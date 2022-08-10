@@ -23,8 +23,8 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 import calculation_module
 import bost_UI
 global C
-
-
+global list_line
+global count_num
 
 # class for plotting a specific figure static or dynamic
 
@@ -186,8 +186,8 @@ class Ui_Tiaoping(object):
 
         localtime0 = time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())
         move_localfolder = com.setOutputFolder('output\BOST_FOR_tiaoping\\' + localtime0)
-        file = os.path.join(move_localfolder, 'tiaoping.txt')
-        f = open(file, 'w')
+
+
         #C = DDS.NSDS()
         #Xoffset = 3.0
         #Yoffset = 1.0
@@ -197,15 +197,17 @@ class Ui_Tiaoping(object):
         #C.sendandrecv({"CCP": "SERVO01 MOV 0 %.2f 0" % (x)})
         #C.sendandrecv({"CCP": "SERVO02 MOV 0 %.2f 0" % (y)})
         localtime0 = time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())
-        move_localfolder = com.setOutputFolder('output\BOST_FOR_tiaoping/' + localtime0)
-        file = os.path.join(move_localfolder, 'tiaoping.txt')
-        # f = open(file, 'w')
-        #return C
+        move_localfolder = com.setOutputFolder('output\BOST_FOR_tiaoping/')
 
         C.sendandrecv({"msgID": 1, "CCP": "LED_G SET 1 %.3f" % 0.3})
         C.sendandrecv({"CCP": "CAM SET 2 %.3f" % 0.002})
+        global list_line
+        list_line = ['0','0','0','0','0','0','0','0','0','0']
+        global count_num
+        count_num=0
 
     def tiaoping(self,C):
+        global count_num
         C.sendandrecv({"CCP": "LED_G OPEN"})
         C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 1 TIMEOUT 1000"})
         zData = C.sendandrecv({"CCP": "WDI GET 5 TIMEOUT 1000"})
@@ -257,28 +259,49 @@ class Ui_Tiaoping(object):
                 Zs[j, k] = z_sanlist[idx]
         C.sendandrecv({"CCP": "LED_G CLOSE"})
         dataz = Zs - zfocus_wdi
+
         #self.fig1.mat_plot_drow(dataz, zrange)
         # f.write(
         #    'Delta_z_upleft=%.2f\tDelta_z_midup=%.2f \tDelta_z_upright=%.2f \nDelta_z_midleft=%.2f\tDelta_z_mid=%.2f \tDelta_z_midright=%.2f \n'
         #    'Delta_z_downleft = % .2f\tDelta_z_middown=%.2f \tDelta_z_downright=%.2f \n' % (
         #    Delta_z_upleft, Delta_z_midup, Delta_z_upright,
         #    Delta_z_midleft, Delta_z_mid, Delta_z_midright, Delta_z_downleft, Delta_z_middown, Delta_z_downright))
-
         # f.close()
 
-        #
+
         I_left = Zs[range(2, 15), 0]
         I_right = Zs[15, range(2, 15)]
         I_up = Zs[0, range(2, 15)]
         I_down = Zs[15, range(2, 15)]
         I_DU = -np.mean(I_left) + np.mean(I_right)
         I_LR = -np.mean(I_down) + np.mean(I_up)
-        line = ('Zpv=%.3f, Zmax=%.3f, Zmin=%.3f\nLeft-Right: %.2fum    Down-Up: %.2fum' % (
+        line = ('Zpv=%.3f, Zmax=%.3f, Zmin=%.3f\n Left-Right: %.2fum    Down-Up: %.2fum\n' % (
         np.amax(Zs) - np.amin(Zs), np.amax(Zs), np.amin(Zs), I_LR, I_DU))
+
+
+        write_line = ('Zpv=%.3f, Zmax=%.3f, Zmin=%.3f  Left-Right: %.2fum    Down-Up: %.2fum ' % (
+        np.amax(Zs) - np.amin(Zs), np.amax(Zs), np.amin(Zs), I_LR, I_DU))
+
         self.textBrowser.setText(line)
         C.sendandrecv({"CCP": "LED_G CLOSE"})
         #folder = os.path.join(move_localfolder, 'tiaoping_%4d.png')
         self.fig1.mat_plot_drow( dataz, zrange, Zs, I_LR, I_DU)
+
+
+        ll=[1,2,3,4,5,6,7,8,9,10]
+
+        if count_num==10 :
+            count_num=0
+        list_line[count_num]=write_line
+        #list_line.insert(ll[count_num], write_line)
+        print(list_line)
+
+        f = open(os.path.join( 'tiaoping.txt'), 'a')
+        f.truncate(0)
+        for line in list_line:
+            f.write(line+'\n')
+        f.close()
+        count_num = count_num + 1
 
 
     def retranslateUi(self, MainWindow):
