@@ -920,8 +920,8 @@ class Ui_MainWindow(object):
         tilemap = com.TileMap('save/TM518.txt')
         localtime0 = time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())
         runID = localtime0
-        C.sendandrecv({"CCP": "WDI_CAPTURER FOCUS"})
-
+        #C.sendandrecv({"CCP": "WDI_CAPTURER FOCUS"})
+        C.sendandrecv({"CCP": "CAM SET 3 0 0 2048 2048"})
         for tid in FM:
             xy = tilemap.t2xy([tid])[0]
             x = xy[0]
@@ -982,7 +982,7 @@ class Ui_MainWindow(object):
                 if not os.path.exists(imgpath):
                     os.mkdir(imgpath)
 
-                C.sendandrecv({"CCP": "CAM SET 3 0 0 2048 2048"})
+                #C.sendandrecv({"CCP": "CAM SET 3 0 0 2048 2048"})
                 print('zfocus:', zfocus)
                 C.sendandrecv({"CCP": "WDI SET 4 %f TIMEOUT 1000" % zfocus})  # 运动到z
                 print('cycle:%02d \tzfocus:%.2f' % (cycle, zfocus))
@@ -991,9 +991,10 @@ class Ui_MainWindow(object):
                 C.sendandrecv({"CCP": "CAM SET 2 %.3f" % BF_expTime})
                 C.sendandrecv({"CCP": "LED_G OPEN"})
                 #focus_z=C.sendandrecv({"CCP": "WDI_CAPTURER TRIGGERPHOTO 0 0 0"})  # 返回焦点数
-
+                C.sendandrecv({"CCP": "WDI_CAPTURER TRIGGERPHOTO 0 0 0"})
                 data = C.sendandrecv({"CCP": "CAM GETIMAGE"})
-                img = com.data2image(data)
+                #img = com.data2image(data)
+                img = com.data2image(data, [2048, 2048])
                 imgcrop = img[624:1424, 624:1424]
                 cv2.imwrite(
                     os.path.join(localfolder, 'img_cycle_%02d-BF_z%.2fum.tiff' % (cycle, zfocus)), imgcrop)
@@ -1004,7 +1005,7 @@ class Ui_MainWindow(object):
                 C.sendandrecv({"CCP": "WDI_CAPTURER TRIGGERPHOTO 0 0 0"})
                 #             data = C.sendandrecv({"CCP": "CAM_CAPTURER TRIGGERPHOTO 0 0 0"})
                 data = C.sendandrecv({"CCP": "CAM GETIMAGE"})
-                img = com.data2image(data)
+                img = com.data2image(data, [2048, 2048])
                 imgcrop = img[624:1424, 624:1424]
                 fvB = calculation_module.SML(img)
                 cv2.imwrite(

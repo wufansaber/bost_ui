@@ -184,8 +184,8 @@ class Ui_Tiaoping(object):
     def tiaoping_init(self):
 
 
-        localtime0 = time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())
-        move_localfolder = com.setOutputFolder('output\BOST_FOR_tiaoping\\' + localtime0)
+       #localtime0 = time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())
+       # move_localfolder = com.setOutputFolder('output\BOST_FOR_tiaoping\\' + localtime0)
 
 
         #C = DDS.NSDS()
@@ -196,8 +196,8 @@ class Ui_Tiaoping(object):
         #C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 0 TIMEOUT 1000"})  # WDI
         #C.sendandrecv({"CCP": "SERVO01 MOV 0 %.2f 0" % (x)})
         #C.sendandrecv({"CCP": "SERVO02 MOV 0 %.2f 0" % (y)})
-        localtime0 = time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())
-        move_localfolder = com.setOutputFolder('output\BOST_FOR_tiaoping/')
+        #localtime0 = time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())
+        #move_localfolder = com.setOutputFolder('output\BOST_FOR_tiaoping/')
 
         C.sendandrecv({"msgID": 1, "CCP": "LED_G SET 1 %.3f" % 0.3})
         C.sendandrecv({"CCP": "CAM SET 2 %.3f" % 0.002})
@@ -213,7 +213,7 @@ class Ui_Tiaoping(object):
         zData = C.sendandrecv({"CCP": "WDI GET 5 TIMEOUT 1000"})
         zfocus_wdi = zData[b'data'][0]
         expTime = 0.02
-
+        move_localfolder = com.setOutputFolder('output\BOST_FOR_tiaoping/')
         #output_img = os.path.join(move_localfolder, 'WDI_focus.tiff')
         C.sendandrecv({"CCP": "WDI_CAPTURER TRIGGERPHOTO 0 0 0"})
         data = C.sendandrecv({"CCP": "CAM GETIMAGE"})
@@ -236,7 +236,6 @@ class Ui_Tiaoping(object):
             # data = C.sendandrecv({"CCP": "CAM GETIMAGE"})
             # zscan_img = com.data2image(data)
             # cv2.imwrite(output_img, zscan_img)
-
             data = C.sendandrecv({"CCP": "WDI_CAPTURER TRIGGERPHOTO 0 0 0"})
             data = C.sendandrecv({"CCP": "CAM GETIMAGE"})
             zscan_img = com.data2image(data)
@@ -295,8 +294,9 @@ class Ui_Tiaoping(object):
         list_line[count_num]=write_line
         #list_line.insert(ll[count_num], write_line)
         print(list_line)
-
-        f = open(os.path.join( 'tiaoping.txt'), 'a')
+        name='tiaoping'
+        file = os.path.join(move_localfolder, name + '.txt')
+        f = open(file, 'a')
         f.truncate(0)
         for line in list_line:
             f.write(line+'\n')
