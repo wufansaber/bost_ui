@@ -920,7 +920,7 @@ class Ui_MainWindow(object):
         tilemap = com.TileMap('save/TM518.txt')
         localtime0 = time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())
         runID = localtime0
-        #C.sendandrecv({"CCP": "WDI_CAPTURER FOCUS"})
+        C.sendandrecv({"CCP": "WDI_CAPTURER FOCUS"})
         C.sendandrecv({"CCP": "CAM SET 3 0 0 2048 2048"})
         for tid in FM:
             xy = tilemap.t2xy([tid])[0]
