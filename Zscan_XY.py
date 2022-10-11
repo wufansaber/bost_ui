@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import math
 import pickle
 
+from outliers import smirnov_grubbs as grubbs
 
 
 def Zscan_data_extract_singlechip(runID,result_path,save_path):
@@ -80,17 +81,23 @@ def Zscan_data_extract_singlechip(runID,result_path,save_path):
     #plt.show()
 
     '''shift info figure'''
-    range_shift1=np.ptp(shift_info_wav[:,0])
-    range_shift2=np.ptp(shift_info_wav[:,1])
-    range_wdishift=np.ptp(shift_info_wav[:,2])
-    std_bundle=np.std(shift_info_wav, axis=0)
-    std_shift1=std_bundle[0]
-    std_shift2=std_bundle[1]
-    std_WDI=std_bundle[2]
-    mean_bundle=np.mean(shift_info_wav, axis=0)
-    mean_shift1=mean_bundle[0]
-    mean_shift2=mean_bundle[1]
-    mean_WDI=mean_bundle[2]
+    range_shift1 = np.ptp(shift_info_wav[:, 0])
+    range_shift2 = np.ptp(shift_info_wav[:, 1])
+    range_wdishift = np.ptp(shift_info_wav[:, 2])
+
+    shift1 = shift_info_wav[:, 0]
+    shift2 = shift_info_wav[:, 1]
+    wdi_shift = shift_info_wav[:, 2]
+    shift1 = grubbs.test(shift1, alpha=.05)
+    shift2 = grubbs.test(shift2, alpha=.05)
+    wdi_shift = grubbs.test(wdi_shift, alpha=.05)
+
+    std_shift1 = np.std(shift1, ddof=1)
+    std_shift2 = np.std(shift2, ddof=1)
+    std_WDI = np.std(wdi_shift, ddof=1)
+    mean_shift1 = np.mean(shift1)
+    mean_shift2 = np.mean(shift2)
+    mean_WDI = np.mean(wdi_shift)
     plt.figure(figsize=(20,10))
     plt.subplot(3,2,1)
     line1,=plt.plot(shift_info_wav[:,0],marker='o',markerfacecolor='none',markersize = '5',linestyle='-',linewidth='1')
@@ -106,17 +113,22 @@ def Zscan_data_extract_singlechip(runID,result_path,save_path):
     plt.plot([0,tileNum],[mean_WDI,mean_WDI],'r',linewidth='0.5')
     plt.legend(handles=[line3], labels=['WDI_s,range %s std %s mean %s'%(range_wdishift,std_WDI,mean_WDI)], loc='best',fontsize=8)
 
-    range_shift1=np.ptp(shift_info_sml[:,0])
-    range_shift2=np.ptp(shift_info_sml[:,1])
-    range_wdishift=np.ptp(shift_info_sml[:,2])
-    std_bundle=np.std(shift_info_sml, axis=0)
-    std_shift1=std_bundle[0]
-    std_shift2=std_bundle[1]
-    std_WDI=std_bundle[2]
-    mean_bundle=np.mean(shift_info_sml, axis=0)
-    mean_shift1=mean_bundle[0]
-    mean_shift2=mean_bundle[1]
-    mean_WDI=mean_bundle[2]
+    range_shift1 = np.ptp(shift_info_sml[:, 0])
+    range_shift2 = np.ptp(shift_info_sml[:, 1])
+    range_wdishift = np.ptp(shift_info_sml[:, 2])
+    shift1 = shift_info_sml[:, 0]
+    shift2 = shift_info_sml[:, 1]
+    wdi_shift = shift_info_sml[:, 2]
+    shift1 = grubbs.test(shift1, alpha=.05)
+    shift2 = grubbs.test(shift2, alpha=.05)
+    wdi_shift = grubbs.test(wdi_shift, alpha=.05)
+
+    std_shift1 = np.std(shift1, ddof=1)
+    std_shift2 = np.std(shift2, ddof=1)
+    std_WDI = np.std(wdi_shift, ddof=1)
+    mean_shift1 = np.mean(shift1)
+    mean_shift2 = np.mean(shift2)
+    mean_WDI = np.mean(wdi_shift)
     plt.subplot(3,2,2)
     line4,=plt.plot(shift_info_sml[:,0],marker='o',markerfacecolor='none',markersize = '5',linestyle='-',linewidth='1')
     plt.legend(handles=[line4], labels=['shift1,range %s std %s mean %s'%(range_shift1,std_shift1,mean_shift1)], loc='best',fontsize=8)

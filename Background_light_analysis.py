@@ -100,6 +100,7 @@ def backguround_ligt_result(filepath):
             img = cv2.imread(imgname,0)
             img1 = cv2.imread(imgname)
             max_area,number=defect_detection(img1)
+            mean = np.mean(img1)
             if max_area!='':
                 max_area_list.append(max_area)
             number_list.append(number)
@@ -125,7 +126,7 @@ def backguround_ligt_result(filepath):
     maxarea=np.max(max_area_list)
     meanarea=np.mean(max_area_list)
     merge = np.asanyarray(merge, dtype="uint16")
-    #mean_merge=np.mean(merge[:,:])
+    mean_merge=np.mean(merge[:,:])
     cv2.imwrite(os.path.join(savepath, savename),merge)
     #plt.figure()
     #ax1=sns.heatmap(merge)
@@ -134,7 +135,7 @@ def backguround_ligt_result(filepath):
     #plt.close()
     with open (os.path.join(savepath,'Background_light_test.txt'),'w') as fid:
         fid.write("最大亮域面积: \t %.4f\n"%maxarea)
-        #fid.write("平均值: \t %.4f\n"%mean_merge)
+        fid.write("平均值: \t %.4f\n"%mean_merge)
         fid.write("平均亮面积: \t %.4f\n"%meanarea)
         fid.write("亮区域个数: \t %.4f\n"%sum_number)
 

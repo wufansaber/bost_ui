@@ -43,14 +43,13 @@ class Figure_Canvas(FigureCanvas):
         self.axes = self.fig.add_subplot(111)  # 清理画布后必须重新添加绘图区
         self.axes.set_xticks([])
         self.axes.set_yticks([])
-        h=self.axes.imshow(zz,plt.get_cmap('jet'),vmin=-zrange, vmax=zrange)
+        h=self.axes.imshow(zz,plt.get_cmap('jet'))
         self.fig.colorbar(h)
         self.axes.set_title('Zmax=%.3f, Zmin=%.3f\nLeft-Right: %.2fum\nDown-Up: %.2fum' % (
          np.amax(Zs), np.amin(Zs), I_LR, I_DU))
 
         self.fig.canvas.draw()  # 这里注意是画布重绘，self.figs.canvas
         self.fig.canvas.flush_events()  # 画布刷新self.figs.canvas
-
 
 
 
@@ -94,10 +93,6 @@ class Ui_Tiaoping(object):
         self.gridlayout2.addWidget(self.plot_plt)
         self.plot_plt.setYRange(max=0.9, min=0)
         self.plot_plt.setXRange(max=0, min=150)
-
-
-
-
         self.graphicsView_1 = QtWidgets.QGraphicsView(self.centralwidget)
         self.graphicsView_1.setGeometry(QtCore.QRect(400, 70, 300, 300))
         self.graphicsView_1.setObjectName("graphicsView_1")
@@ -186,8 +181,6 @@ class Ui_Tiaoping(object):
 
        #localtime0 = time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())
        # move_localfolder = com.setOutputFolder('output\BOST_FOR_tiaoping\\' + localtime0)
-
-
         #C = DDS.NSDS()
         #Xoffset = 3.0
         #Yoffset = 1.0
@@ -198,6 +191,8 @@ class Ui_Tiaoping(object):
         #C.sendandrecv({"CCP": "SERVO02 MOV 0 %.2f 0" % (y)})
         #localtime0 = time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())
         #move_localfolder = com.setOutputFolder('output\BOST_FOR_tiaoping/')
+
+
 
         C.sendandrecv({"msgID": 1, "CCP": "LED_G SET 1 %.3f" % 0.3})
         C.sendandrecv({"CCP": "CAM SET 2 %.3f" % 0.002})
@@ -259,6 +254,7 @@ class Ui_Tiaoping(object):
         C.sendandrecv({"CCP": "LED_G CLOSE"})
         dataz = Zs - zfocus_wdi
 
+
         #self.fig1.mat_plot_drow(dataz, zrange)
         # f.write(
         #    'Delta_z_upleft=%.2f\tDelta_z_midup=%.2f \tDelta_z_upright=%.2f \nDelta_z_midleft=%.2f\tDelta_z_mid=%.2f \tDelta_z_midright=%.2f \n'
@@ -277,7 +273,6 @@ class Ui_Tiaoping(object):
         line = ('Zpv=%.3f, Zmax=%.3f, Zmin=%.3f\n Left-Right: %.2fum    Down-Up: %.2fum\n' % (
         np.amax(Zs) - np.amin(Zs), np.amax(Zs), np.amin(Zs), I_LR, I_DU))
 
-
         write_line = ('Zpv=%.3f, Zmax=%.3f, Zmin=%.3f  Left-Right: %.2fum    Down-Up: %.2fum ' % (
         np.amax(Zs) - np.amin(Zs), np.amax(Zs), np.amin(Zs), I_LR, I_DU))
 
@@ -285,7 +280,6 @@ class Ui_Tiaoping(object):
         C.sendandrecv({"CCP": "LED_G CLOSE"})
         #folder = os.path.join(move_localfolder, 'tiaoping_%4d.png')
         self.fig1.mat_plot_drow( dataz, zrange, Zs, I_LR, I_DU)
-
 
         ll=[1,2,3,4,5,6,7,8,9,10]
 

@@ -4,6 +4,7 @@
 import os
 import sys
 import cv2
+import numpy
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QThread, QTimer, pyqtSignal, QRectF, QSizeF, QPointF
 from PyQt5.QtWidgets import QGraphicsPixmapItem, QGraphicsScene, QFormLayout, QApplication, QWidget
@@ -88,7 +89,7 @@ class Ui_MainWindow(object):
         global Xoffset, Yoffset
 
         C, self.outputfolder, self.logger,Xoffset, Yoffset=self.init_ds()
-        MainWindow.setObjectName("光学测试软件  v0.1.2")
+        MainWindow.setObjectName("光学测试软件  v0.1.3")
         MainWindow.resize(1300, 800)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -344,6 +345,14 @@ class Ui_MainWindow(object):
         self.astigmatism_button.setObjectName("astigmatism_button")
         self.exposure_time.setText(str(0.003))
 
+        self.Z_MAP_button = QtWidgets.QPushButton(self.centralwidget)#Z-FFT
+        self.Z_MAP_button.setGeometry(QtCore.QRect(480, 670, 101, 31))
+        self.Z_MAP_button.setObjectName("Z_MAP_button")
+
+        self.Field_curvature_button = QtWidgets.QPushButton(self.centralwidget)
+        self.Field_curvature_button.setGeometry(QtCore.QRect(480, 700, 101, 31))
+        self.Field_curvature_button.setObjectName("Field_curvature_button")
+
         self.textBrowser = QtWidgets.QTextBrowser(self.centralwidget)#内容显示
         self.textBrowser.setGeometry(QtCore.QRect(60, 670, 400, 100))
         self.textBrowser.setObjectName("textBrowser")
@@ -404,6 +413,8 @@ class Ui_MainWindow(object):
         self.WDI_test_button.clicked.connect(self.WDI_test)
         self.zscan_button.clicked.connect(self.zscan_start)
         self.astigmatism_button.clicked.connect(self.means_astigmatism)
+        self.Z_MAP_button.clicked.connect(self.measure_z_map)
+        self.Field_curvature_button.clicked.connect(self.Field_curvature)
 
         self.get_x_display()
         self.get_y_display()
@@ -411,7 +422,7 @@ class Ui_MainWindow(object):
 
 
 
-    def zscan_start(self):# z扫描对焦并移动到最佳对焦位置
+    def zscan_start(self): # z扫描对焦并移动到最佳对焦位置
 
         C.sendandrecv({"msgID": 1, "CCP": "LED_G SET 1 %.1f" % 0.2})
         C.sendandrecv({"CCP": "CAM SET 2 %.3f" % 0.002})
@@ -770,7 +781,6 @@ class Ui_MainWindow(object):
         plt.savefig(os.path.join(output_shading_plot))
         img_show = calculation_module.image_16_8(img_resize_up)
         self.show_image(img_show)
-
         f = open(os.path.join(localfolder, 'shading.txt'), 'a')
         f.write('max_value=%.3f\nmin_value=%.3f\nUniformity=%.3f\nmean_value=%.3f\n' % (max_value, min_value,Uniformity,mean_value))
         f.close()
@@ -823,7 +833,7 @@ class Ui_MainWindow(object):
         # 添加右侧的色卡条
         fig.colorbar(surf, shrink=0.6, aspect=8)  # shrink表示整体收缩比例，aspect仅对bar的宽度有影响，aspect值越大，bar越窄
         plt.show()
-        plt.savefig(os.path.join('output\shading\shading_plot.png'))
+        #plt.savefig(os.path.join('output\shading\shading_plot.png'))
         return plt
 
 
@@ -840,6 +850,7 @@ class Ui_MainWindow(object):
         expTime = 0.03
         img = self.cap_image(expTime, 1, output_img)
         img=img[2:2045,2:2045]
+        img = cv2.blur(img, (5, 5), 0)
         mean_img = np.mean(img)
         max = np.max(img)
         min = np.min(img)
@@ -879,7 +890,7 @@ class Ui_MainWindow(object):
        # move_localfolder = com.setOutputFolder('output\Background_light_test\\' + localtime0)
         C.sendandrecv({"msgID": 1, "CCP": "LED_B SET 1 %.1f" % FF_LED})
         # C.sendandrecv({"CCP": "LED_G OPEN"})
-       # C.sendandrecv({"CCP": "LED_B OPEN"})
+        # C.sendandrecv({"CCP": "LED_B OPEN"})
         for i in range(1, cyc + 1):
             for tid in FM:
                 # print(tid)
@@ -903,18 +914,18 @@ class Ui_MainWindow(object):
                 wdi_img = com.data2image(data, [2048, 2048])
                 output_img = os.path.join(move_localfolder, 'wdi_tile%04d_%02d.tiff' % (tid, i))
                 cv2.imwrite(output_img, wdi_img)
- #              C.sendandrecv({"CCP": "WDI SET 4 %f TIMEOUT 1000" % (zData_down )})
+                # C.sendandrecv({"CCP": "WDI SET 4 %f TIMEOUT 1000" % (zData_down )})
         C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 0 TIMEOUT 1000"})  # AutoFocus Off!
 
     def WDI_test(self):
         self.close_all
-        zRange=3
-        zStep=0.2
+        zRange=2.5
+        zStep=0.25
         FF_expTime=float(self.exposure_time.text())
         BF_expTime=0.002
         BFLEDcurrent = float(self.Brightfield_value.text())
         FFLEDcurrent = float(self.fluorsecent_value.text())
-        FMfile = 'save/FM518_S.txt'
+        FMfile = 'save/WDI_MAP.txt'
         FM, FMZ = com.readFocusMap(FMfile)
         tilenumber = len(FM)
         tilemap = com.TileMap('save/TM518.txt')
@@ -1009,14 +1020,14 @@ class Ui_MainWindow(object):
                 imgcrop = img[624:1424, 624:1424]
                 fvB = calculation_module.SML(img)
                 cv2.imwrite(
-                    os.path.join(localfolder, 'img_cycle_%02d-FF_z%.2fum.tiff' % (cycle, zfocus)), imgcrop)
+                    os.path.join(localfolder, 'img_cycle_%02d-FF_z%.2fum.tiff' % (cycle, zfocus)), img)
                 C.sendandrecv({"CCP": "LED_B CLOSE"})
                 #time.sleep(0.02)
 
                 f.write('z\t G_WAV\t G_SML\t B_WAV\t B_SML\n')
                 #C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 0 TIMEOUT 1000"})
                 if fvB<0.2:
-                    C.sendandrecv({"CCP": "WDI SET 4 %f TIMEOUT 1000" % (z+40)})
+                    C.sendandrecv({"CCP": "WDI SET 4 %f TIMEOUT 1000" % (zfocus+45)})
                     C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 1 TIMEOUT 1000"})  # AutoFocus On!
                     time.sleep(0.5)
                     C.sendandrecv({"CCP": "WDI GET 5 TIMEOUT 1000"})
@@ -1030,20 +1041,19 @@ class Ui_MainWindow(object):
                 for z in np.arange(zfocus - zRange, zfocus + zRange + zStep, zStep):
                     C.sendandrecv({"CCP": "WDI SET 4 %f TIMEOUT 1000" % z})  # 运动到z
                     time.sleep(0.03)
-                    C.sendandrecv({"CCP": "CAM SET 2 0.002"})
-                    C.sendandrecv({"CCP": "LED_G OPEN"})
-                    C.sendandrecv({"CCP": "WDI_CAPTURER TRIGGERPHOTO 0 0 0"})
-
-                    data = C.sendandrecv({"CCP": "CAM GETIMAGE"})
-                    img = com.data2image(data)
-                    C.sendandrecv({"CCP": "LED_G CLOSE"})
-                    imgsmall = img[900:1100, 900:1100]
-                    imgcrop = img[624:1424, 624:1424]
-                    fvG_WT = calculation_module.WAVV(imgsmall)  # 反应照片清晰度的对焦值，小波变换
-                    fvG_ML = calculation_module.SML(imgsmall)  # 反应照片清晰度的对焦值，改进的拉普拉斯算子
-
-                    cv2.imwrite(os.path.join(imgpath, 'BFimg_cycle_%02d_z%.2fum_fv%.3f.tiff' % (
-                        cycle, z, fvG_WT)), imgcrop)
+                    # C.sendandrecv({"CCP": "CAM SET 2 0.002"})
+                    # C.sendandrecv({"CCP": "LED_G OPEN"})
+                    # C.sendandrecv({"CCP": "WDI_CAPTURER TRIGGERPHOTO 0 0 0"})
+                    #
+                    # data = C.sendandrecv({"CCP": "CAM GETIMAGE"})
+                    # img = com.data2image(data)
+                    # C.sendandrecv({"CCP": "LED_G CLOSE"})
+                    # imgsmall = img[900:1100, 900:1100]
+                    # imgcrop = img[624:1424, 624:1424]
+                    # fvG_WT = calculation_module.WAVV(imgsmall)  # 反应照片清晰度的对焦值，小波变换
+                    # fvG_ML = calculation_module.SML(imgsmall)  # 反应照片清晰度的对焦值，改进的拉普拉斯算子
+                    #cv2.imwrite(os.path.join(imgpath, 'BFimg_cycle_%02d_z%.2fum_fv%.3f.tiff' % (
+                    #    cycle, z, fvG_WT)), imgcrop)
 
                     C.sendandrecv({"CCP": "CAM SET 2 0.03"})
                     C.sendandrecv({"CCP": "LED_B OPEN"})
@@ -1061,6 +1071,8 @@ class Ui_MainWindow(object):
                         cycle, z, fvB_ML)), img)
 
                     #time.sleep(0.02)
+                    fvG_WT=0.5
+                    fvG_ML=0.5
                     print('z=%.3f\t G_WAV=%.3f\t G_SML=%.3f\t B_WAV=%.3f\t B_SML=%.3f' % (
                         z, fvG_WT, fvG_ML, fvB_WT, fvB_ML))
                     f.write('%.3f\t%.3f\t%.3f\t%.3f\t%.3f\n' % (z, fvG_WT, fvG_ML, fvB_WT, fvB_ML))
@@ -1077,83 +1089,211 @@ class Ui_MainWindow(object):
         f.close()
 
 
+    def WDI_ligt(self):
 
-    def z_get_imge2(self,zRange,zStep,FF_expTime,BF_expTime,BFLEDcurrent,FFLEDcurrent):
+        greenLEDcurrent = float(self.Brightfield_value.text())
+        blueLEDcurrent = float(self.fluorsecent_value.text())
+        C.sendandrecv({"msgID": 1, "CCP": "LED_G SET 1 %.1f" % greenLEDcurrent})
+        C.sendandrecv({"msgID": 1, "CCP": "LED_B SET 1 %.1f" % blueLEDcurrent})
+        C.sendandrecv({"CCP": "CAM SET 3 0 0 2048 2048"})
+        localtime0 = time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())
+        name = localtime0
+        localfolder = com.setOutputFolder(os.path.join('output\WDI_ligt' + '/' + name))
+        FF_expTime = float(self.exposure_time.text())
+        for cycle in range(10):
+            C.sendandrecv({"CCP": "CAM SET 2 0.002"})
+            C.sendandrecv({"CCP": "LED_G OPEN"})
+            C.sendandrecv({"CCP": "WDI_CAPTURER TRIGGERPHOTO 0 0 0"})
+            data = C.sendandrecv({"CCP": "CAM GETIMAGE"})
+            img = com.data2image(data)
+            C.sendandrecv({"CCP": "LED_G CLOSE"})
+            cv2.imwrite(os.path.join(localfolder, 'BFimg_%d.tiff' % (
+            cycle)), img)
+            C.sendandrecv({"CCP": "CAM SET 2 %.3f" % FF_expTime})
+            C.sendandrecv({"CCP": "WDI_CAPTURER TRIGGERPHOTO 0 0 0"})
+            data = C.sendandrecv({"CCP": "CAM GETIMAGE"})
+            img = com.data2image(data)
+            cv2.imwrite(os.path.join(localfolder, 'WDI_img_%d.tiff' % (
+                cycle)), img)
 
+
+
+    def Field_curvature(self):
+        self.close_all
         zData = C.sendandrecv({"CCP": "WDI GET 4 TIMEOUT 1000"})
         # print('wdifocuse=%fum' % zData[b'data'][0])
         z = format(zData[b'data'][0], '.3f')
         zfocus = float(z)
-       # greenLEDcurrent = float(self.Brightfield_value.text())
-       # blueLEDcurrent = float(self.fluorsecent_value.text())
-        C.sendandrecv({"msgID": 1, "CCP": "LED_G SET 1 %.1f" % BFLEDcurrent})
-        C.sendandrecv({"msgID": 1, "CCP": "LED_B SET 1 %.1f" % FFLEDcurrent})
-        #C.sendandrecv({"CCP": "CAM SET 3 0 0 2048 2048"})
+        zfocus=round(zfocus,2)
+        greenLEDcurrent = float(self.Brightfield_value.text())
+        blueLEDcurrent = float(self.fluorsecent_value.text())
+        C.sendandrecv({"msgID": 1, "CCP": "LED_G SET 1 %.1f" % greenLEDcurrent})
+        C.sendandrecv({"msgID": 1, "CCP": "LED_B SET 1 %.1f" % blueLEDcurrent})
+        C.sendandrecv({"CCP": "CAM SET 3 0 0 2048 2048"})
 
-       # zRange = 8
-       # zStep = 0.2  # um
+        zRange = 5
+        zStep = 0.2  # um
         localtime0 = time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())
         name = localtime0
-        outputfolder = 'output\z_get_imge'
-        localfolder = com.setOutputFolder(os.path.join('output\z_get_imge' + '/' + name))
+        localfolder = com.setOutputFolder(os.path.join('output\ZField_curvature' + '/' + name))
         file = os.path.join(localfolder, name + '.txt')
         f = open(file, 'a')
-
-        print('Start test\tAt:%s\tzRange=%f\tzStep=%f' % (localtime0, zRange, zStep))
         f.write('Start test\tAt:%s\tzRange=%f\tzStep=%f\n' % (localtime0, zRange, zStep))
         f.close()
-        expTime = float(self.exposure_time.text())
-        for cycle in range(1):
-            f = open(file, 'a')
-            localtime = time.strftime("%Y-%m-%d_%H:%M:%S", time.localtime())
-            print('cycle:%d\tAt:%s' % (cycle, localtime))
-            f.write('cycle:%d\tAt:%s\n' % (cycle, localtime))
-            f.close()
+        a = zfocus - zRange
+        b = zfocus + zRange
+        z_sanlist = np.arange(a, b, zStep)
+        SML = np.zeros((len(z_sanlist), 16, 16))
+        C.sendandrecv({"CCP": "CAM SET 3 0 0 2048 2048"})
 
-            with open(file, 'a') as f:
+        C.sendandrecv({"CCP": "WDI SET 4 %f TIMEOUT 1000" % zfocus})  # 运动到z
 
-                imgpath = localfolder + '/img_cycle%02d' % (cycle)
-                if not os.path.exists(imgpath):
-                    os.mkdir(imgpath)
-                C.sendandrecv({"CCP": "CAM SET 3 0 0 2048 2048"})
-                print('zfocus:', zfocus)
-                C.sendandrecv({"CCP": "WDI SET 4 %f TIMEOUT 1000" % zfocus})  # 运动到z
-                print('cycle:%02d \tzfocus:%.2f' % (cycle, zfocus))
-                f.write('cycle:%02d\tzfocus:%.2f\n' % (cycle, zfocus))
 
-                time.sleep(0.02)
+        time.sleep(0.02)
+        count=0
 
-                f.write('z\t G_WAV\t G_SML\t B_WAV\t B_SML\n')
+        for z in z_sanlist:
+            C.sendandrecv({"CCP": "WDI SET 4 %f TIMEOUT 1000" % z})  # 运动到z
+            time.sleep(0.3)
+            C.sendandrecv({"CCP": "CAM SET 2 0.03"})
+            C.sendandrecv({"CCP": "LED_B OPEN"})
+            C.sendandrecv({"CCP": "WDI_CAPTURER TRIGGERPHOTO 0 0 0"})
+            data = C.sendandrecv({"CCP": "CAM GETIMAGE"})
+            img = com.data2image(data)
+            C.sendandrecv({"CCP": "LED_B CLOSE"})
+            cv2.imwrite(os.path.join(localfolder, 'FFimg_z%.2fum.tiff' % (z)), img)
 
-                for z in np.arange(zfocus - zRange, zfocus + zRange + zStep, zStep):
-                    C.sendandrecv({"CCP": "WDI SET 4 %f TIMEOUT 1000" % z})  # 运动到z
-                    time.sleep(0.3)
-                    #C.sendandrecv({"CCP": "CAM SET 2 0.001"})
-                    #C.sendandrecv({"CCP": "LED_G OPEN"})
-                    C.sendandrecv({"CCP": "WDI_CAPTURER TRIGGERPHOTO 0 0 0"})
+            for j in range(16):
+                for k in range(16):
+                    subimg = img[j * 128:j * 128 + 128, k * 128:k * 128 + 128]
+                    SMLS = calculation_module.SML(subimg)
+                    SML[count, j, k] = SMLS
+            center_fv = max(SML[:, 7, 7])
+            count = count + 1
 
-                    data = C.sendandrecv({"CCP": "CAM GETIMAGE"})
-                    img = com.data2image(data)
-                   # C.sendandrecv({"CCP": "LED_G CLOSE"})
-                    imgsmall = img[900:1100, 900:1100]
-                    fvG_WT = calculation_module.WAVV(imgsmall)  # 反应照片清晰度的对焦值，小波变换
-                    #fvG_ML = calculation_module.SML(imgsmall)  # 反应照片清晰度的对焦值，改进的拉普拉斯算子
+        Zs = np.zeros((16, 16))
+        fv_z = SML[:, 7, 7]
+        idx = np.where(fv_z == np.amax(center_fv))
+        center_z = ((z_sanlist[idx]))
 
-                    cv2.imwrite(os.path.join(imgpath, 'BFimg_cycle_%02d_z%.2fum_fv%.3f.tiff' % (
-                       cycle, z, fvG_WT)), img)
 
-                    #time.sleep(0.02)
+        for j in range(16):
+            for k in range(16):
+                fv_z = SML[:, j, k]
+                idx = np.where(fv_z == np.amax(fv_z))
+                Zs[j, k] = ((z_sanlist[idx])-center_z)
 
-        #f = open(file, 'a')
-        #print(('cycle:%d finish!') % cycle)
-        #f.write(('cycle:%d finish!\n') % cycle)
-        #f.close()
 
-        #f = open(file, 'a')
-        #localtime = time.strftime("%Y-%m-%d_%H:%M:%S", time.localtime())
-        #print('Finish!\tAt:%s' % (localtime))
-        #f.write('Finish!\tAt:%s\n' % (localtime))
-        #f.close()
+
+
+        I_left = Zs[range(2, 15), 0]
+        I_right = Zs[15, range(2, 15)]
+        I_up = Zs[0, range(2, 15)]
+        I_down = Zs[15, range(2, 15)]
+        I_DU = -np.mean(I_left) + np.mean(I_right)
+        I_LR = -np.mean(I_down) + np.mean(I_up)
+
+        plt.figure(figsize=(5, 5))
+        plt.imshow(Zs, cmap='jet')
+        plt.colorbar()
+        plt.xlabel('Tile_X')
+        plt.ylabel('Tile_Y')
+        plt.title('Zmax=%.3f, Zmin=%.3f\nLeft-Right: %.2fum\nDown-Up: %.2fum' % (np.amax(Zs), np.amin(Zs), I_LR, I_DU))
+
+        output_field_curvature = os.path.join(localfolder, 'field_curvature.png')
+        plt.savefig(os.path.join(output_field_curvature))
+        f = open(file, 'a')
+
+        f.write ('Zmax=%.3f, Zmin=%.3f\nLeft-Right: %.2fum\nDown-Up: %.2fum\n' % (np.amax(Zs), np.amin(Zs), I_LR, I_DU))
+
+        n=16
+        nums = Zs
+
+        for i in range(n):
+            for j in range(n):
+                f.write(str(round(Zs[i][j],2))+'\t')
+            f.write('\n')
+
+
+        f.close()
+
+
+
+
+    def measure_z_map(self):
+        self.close_all()
+        global tilenumber
+        FMfile = 'save/FM518_S.txt'
+        FM, FMZ = com.readFocusMap(FMfile)
+        tilenumber = len(FM)
+        tilemap = com.TileMap('save/TM518.txt')
+        C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 1 TIMEOUT 1000"})  # AutoFocus On!
+        C.sendandrecv({"CCP": "SERVO01 MOV 4 %.2f 0"})
+        C.sendandrecv({"CCP": "SERVO02 MOV 4 %.2f 0"})
+        wait_time = float(0.05)
+        time.sleep(wait_time)
+        localtime0 = time.strftime("%Y_%m_%d_%H_%M_%S", time.localtime())
+        move_localfolder = com.setOutputFolder('output\measure_z_map\\' + localtime0)
+        zfocus_wdi_tile = []
+        arry_z_tile=[]
+        f = open(os.path.join(move_localfolder, 'z_map.txt'), 'a')
+
+
+        Z_WDI = np.zeros((37, 14))
+        for tid in FM:
+            # print(tid)
+            xy = tilemap.t2xy([tid])[0]
+            x = xy[0]
+            y = xy[1]
+            C.sendandrecv({"CCP": "SERVO01 MOV 0 %.2f 0" % (x)})
+            C.sendandrecv({"CCP": "SERVO02 MOV 0 %.2f 0" % (y)})
+            C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 1 TIMEOUT 1000"})  # AutoFocus On!
+            time.sleep(wait_time)
+            C.sendandrecv({"CCP": "WDI GET 5 TIMEOUT 1000"})  # To Wait for FocusOver and Get z
+            zData = C.sendandrecv({"CCP": "WDI GET 4 TIMEOUT 1000"})
+
+            z = format(zData[b'data'][0], '.3f')
+            zfocus = float(z)
+
+            zfocus_wdi_tile.append(zfocus)
+
+            C.sendandrecv({"CCP": "WDI AUTOFOCUSCONTROL 0 TIMEOUT 1000"})  # AutoFocus Off!
+            f.write('tile= %.3d\t Z=%.3f\n' % (tid,zfocus))
+
+        for n in range(14):
+            if n % 2 == 0:
+                for m in range(37):
+                    arry_z_tile.append(zfocus_wdi_tile[m+n*37])
+            else:
+                for m in range(36,-1,-1):
+                    arry_z_tile.append(zfocus_wdi_tile[m+n*37])
+        arry_z_tile = numpy.array(arry_z_tile)
+        arry_z_tile=np.reshape(arry_z_tile,[14,37])
+        zfocus_Image=np.transpose(arry_z_tile)
+
+
+        max_z_value=max(zfocus_wdi_tile)
+        min_z_value=min(zfocus_wdi_tile)
+
+        f.write('max_z_value= %.3f\t min_z_value=%.3f\n' % (max_z_value,min_z_value))
+        f.write('pv_z= %.3f\n' % (max_z_value-min_z_value))
+        left_z = np.mean(zfocus_Image[0:36, 0])
+        right_z = np.mean(zfocus_Image[0:36, 13])
+        up_z = np.mean(zfocus_Image[0, 0:13])
+        down_z = np.mean(zfocus_Image[36, 0:13])
+        f.write('left-rigt= %.3f\n' % (left_z - right_z))
+        f.write('up-down= %.3f\n' % (up_z - down_z))
+
+        plt.figure(figsize=(5, 10))
+        plt.imshow(zfocus_Image, cmap='jet')
+        plt.colorbar()
+        plt.xlabel('Tile_X')
+        plt.ylabel('Tile_Y')
+        plt.title('Z_MAP\n max_z_value= %.3f\t min_z_value=%.3f\n left-rigt= %.3f\n up-down= %.3f\n pv_z= %.3f\n' % (max_z_value, min_z_value ,(left_z - right_z),(up_z - down_z),(max_z_value-min_z_value)))
+        output_shading_plot = os.path.join(move_localfolder, 'z_map_2.png')
+        plt.savefig(os.path.join(output_shading_plot))
+        plt.show()
+        f.close()
 
     def static_focus(self):
         self.close_all()
@@ -1252,6 +1392,8 @@ class Ui_MainWindow(object):
         self.textBrowser.clear()
         self.textBrowser.setText('对焦测试结束\n')
         self.textBrowser.setText('max:%.3f\tmin:%.3f\tmean:%.3f\n' % (max_unitformit, min_unitformit,mean_unitformit))
+
+
 
     def means_astigmatism(self):
         self.close_all()
@@ -1418,7 +1560,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", " Optical test V 0.1.2"))
+        MainWindow.setWindowTitle(_translate("MainWindow", " Optical test V 0.1.7"))
         self.chip_in_button.setText(_translate("MainWindow", "进仓"))
         self.chip_out_button.setText(_translate("MainWindow", "出仓"))
         self.z_move_button.setText(_translate("MainWindow", "Z"))
@@ -1454,6 +1596,9 @@ class Ui_MainWindow(object):
         self.shading_button.setText(_translate("MainWindow", "照明均匀度"))
         self.Resolution_button.setText(_translate("MainWindow", "分辨率"))
         self.flat_button.setText(_translate("MainWindow", "调平评价"))
+        self.Z_MAP_button.setText(_translate("MainWindow", "Z_MAP"))
+        self.Field_curvature_button.setText(_translate("MainWindow", "场曲"))
+
         self.Nine_View_button.setText(_translate("MainWindow", "九宫格显示"))
         self.Background_light_test_button.setText(_translate("MainWindow", "背景杂光测试"))
         self.cal_rotation_button.setText(_translate("MainWindow", "相机旋转角度"))
