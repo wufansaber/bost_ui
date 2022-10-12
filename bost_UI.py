@@ -89,7 +89,7 @@ class Ui_MainWindow(object):
         global Xoffset, Yoffset
 
         C, self.outputfolder, self.logger,Xoffset, Yoffset=self.init_ds()
-        MainWindow.setObjectName("光学测试软件  v0.1.3")
+        MainWindow.setObjectName("光学测试软件  v0.1.8")
         MainWindow.resize(1300, 800)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -1186,10 +1186,10 @@ class Ui_MainWindow(object):
 
 
 
-        I_left = Zs[range(2, 15), 0]
-        I_right = Zs[15, range(2, 15)]
-        I_up = Zs[0, range(2, 15)]
-        I_down = Zs[15, range(2, 15)]
+        I_left = Zs[range(1, 14), 0]
+        I_right = Zs[range(1, 14), 15]
+        I_up = Zs[0, range(1, 14)]
+        I_down = Zs[15, range(1, 14)]
         I_DU = -np.mean(I_left) + np.mean(I_right)
         I_LR = -np.mean(I_down) + np.mean(I_up)
 
@@ -1216,7 +1216,8 @@ class Ui_MainWindow(object):
 
 
         f.close()
-
+        self.textBrowser.clear()
+        self.textBrowser.setText('make0 完毕')
 
 
 
@@ -1560,7 +1561,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", " Optical test V 0.1.7"))
+        MainWindow.setWindowTitle(_translate("MainWindow", " Optical test V 0.1.8"))
         self.chip_in_button.setText(_translate("MainWindow", "进仓"))
         self.chip_out_button.setText(_translate("MainWindow", "出仓"))
         self.z_move_button.setText(_translate("MainWindow", "Z"))

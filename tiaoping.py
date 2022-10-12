@@ -264,10 +264,10 @@ class Ui_Tiaoping(object):
         # f.close()
 
 
-        I_left = Zs[range(2, 15), 0]
-        I_right = Zs[15, range(2, 15)]
-        I_up = Zs[0, range(2, 15)]
-        I_down = Zs[15, range(2, 15)]
+        I_left = Zs[range(1, 14), 0]
+        I_right = Zs[range(1, 14),15]
+        I_up = Zs[0, range(1, 14)]
+        I_down = Zs[15, range(1, 14)]
         I_DU = -np.mean(I_left) + np.mean(I_right)
         I_LR = -np.mean(I_down) + np.mean(I_up)
         line = ('Zpv=%.3f, Zmax=%.3f, Zmin=%.3f\n Left-Right: %.2fum    Down-Up: %.2fum\n' % (
